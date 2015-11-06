@@ -1,0 +1,179 @@
+#mainContainer {
+	vertical-align:top;
+	margin-top: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 98%;
+}
+#page-content-wrapper{
+	background-color:#FFFFFF;
+	visibility:hidden;
+	height: 100%;
+}
+
+.heatMap rect.bordered {
+	stroke: #E6E6E6;
+	stroke-width:2px;   
+}
+
+.heatMap text.mono {
+	font-size: 9pt;
+	font-family: Consolas, courier;
+	fill: #aaa;
+}
+
+.heatMap text.axis-workweek {
+	fill: #000;
+}
+
+.heatMap text.axis-worktime {
+	fill: #000;
+}
+#KPITree{
+    border-style: solid;
+    border-width: 1px;
+	width: 300px;
+	max-width: 100%;
+}
+
+#targetTable
+{
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+.inputField{
+	width:100px;
+	margin-bottom: 5px;
+}
+.progress span{
+    display: block;
+    position: absolute;
+    width: 90%;
+}
+
+.containerColor{
+	background-color: #F9F9FC
+}
+.containerColor2{
+	background-color: #F0F0F3;
+}
+
+.pageHeader{
+	font-size: 15pt;
+	
+}
+
+
+.mainTable TD{
+	vertical-align:top;
+}
+.screenTable{
+	width:100%;
+    border-spacing: 10px;
+    border-collapse: separate;
+}
+
+.screenTable TD{
+	text-align:left;
+}
+
+.screen{
+	background-color:#FFFFFF;
+	width:100%;
+	visibility: hidden;
+}
+
+.logo{
+	background-image: url("../images/proasense.svg");
+	height: 100%;
+	background-size:65%;
+	background-position: center; 
+	background-repeat: no-repeat;
+}
+
+.headerTable{
+	text-align:center;
+    border-collapse: separate;	
+    border-spacing: 3px;
+	width: 100%;
+}
+.queryTable
+{	
+	width:80%;
+	max-width:600px;
+	margin-left:auto;
+	margin-right:auto;
+	border-spacing:10px;
+}
+.queryTable input
+{
+	width: 200px;
+}
+#attributesTable tr
+{
+	display:none;
+}
+.queryTable select
+{
+	width: 200px;
+}
+
+.chartTable{
+	border-collapse: separate;
+	border-spacing: 5px
+}
+.bottomTable{
+	width:100%;
+	border-spacing: 5px;
+}
+.middleTable{
+	background-color: #F0F0F3;
+    border-collapse: separate;	
+    border-spacing: 10px;
+	width: 100%;
+}
+
+.tab-content {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+    padding: 10px;
+}
+
+.kpiChoice
+{
+	display:none;
+}
+.sensorChoice
+{
+	display:none;
+}
+.elAggRow
+{
+	display:none;
+}
+.elRow
+{
+	display:none;
+}
+.box{
+	width:150px;
+}
+.thEl
+{
+	color:#808080;
+}
+.grey{
+	color:#808080;
+}
+.box option:not(:disabled){
+	color:black;
+}
+
+.nav-tabs {
+    margin-bottom: 0;
+}
+
+.hiddenRow{
+	display:none
+}

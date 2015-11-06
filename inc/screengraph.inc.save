@@ -1,0 +1,143 @@
+<table class="headerTable">
+
+	<tr>
+		<td colspan=3><div class="pageHeader"><b>Real time KPIs</i></div></td>
+	</tr>
+	<tr>
+		<td width=33% style="vertical-align: middle">
+			<div class="pageHeader">Total units</div>
+			<div class="pageHeader" id="totalUnits" style="color:#999">1259</div>
+		</td>
+		<td width=33% align="center" style="vertical-align: middle">
+			<div id="gauge" style="width: 150px; height: 120px;"></div>
+		</td>
+		<td style="vertical-align: middle;" >
+			<div class="pageHeader">OEE</div>
+			<div class="progress" style="width:60%;margin:auto">
+			  <div class="progress-bar" role="progressbar" aria-valuenow="87"
+			  aria-valuemin="0" aria-valuemax="100" style="width:70%">
+				87%
+			  </div>
+			</div>					
+		</td>
+	</tr>
+</table>
+<table id="graphTable" class="containerColor chartTable" width="100%">
+    <tr>
+		<form action="">
+			<td >
+				<input type="radio" name="type" value="Product">
+				Product
+				<br>
+			</td>
+			<td >
+				<input type="radio" checked name="type" value="Machine">
+				Machine
+				<br>
+			</td>
+			<td>
+				<input type="radio" name="type" value="Shift">
+				Shift
+				<br>
+			</td>
+			<td >
+				<input type="radio" name="type" value="Mould">
+				Mould
+				<br>
+			</td>
+		</form>
+    </tr>
+	<tr>
+		<td id="graphCell" rowspan=2 colspan=4>
+			<div id="container" style="min-width:300px;height: 400px; margin: 0 auto;border: 0px solid black"></div>
+		</td>
+		<td style="border:0px solid black;vertical-align:top;width:150px">
+			<b>period covered:</b>
+			<br><br>
+			From:
+			<br>
+			<input type="text" class="inputField" id="fromDateChart" value="">
+			<br>
+			To:
+			<br>
+			<input type="text" class="inputField" id="toDateChart" value="">
+			<br><br>
+			<b>Granulatiry:</b>
+			<br><br>
+			<select id="granulatiry" class="box">
+					<option value="hourly">Hourly</option>
+					<option value="daily">Daily</option>
+					<option value="weekly">Weekly</option>
+					<option value="monthly">Monthly</option>
+			</select>
+		</td>	
+	</tr>
+	<tr>
+		<td>
+			<div align="right" class="btn-group screen;" role="group" aria-label="...">
+				<button type="button" id="cancelBtn" class="btn btn-default">Update</button>
+			</div>
+		</td>
+	</tr>
+</table>
+
+<br>
+<div align="left">Contextual Information</div>
+<form action="">
+<table id="heatMapTable" class="containerColor chartTable"  width="100%">
+
+<tr>
+        <td>
+			<input type="CheckBox">
+            Product
+			<br>
+        </td>
+		<td >
+			<input type="CheckBox">
+            Machine
+			<br>
+        </td>
+		<td >
+			<input type="CheckBox">
+            Shift
+			<br>
+        </td>
+		<td >
+			<input type="CheckBox">
+            Mould
+			<br>
+        </td>
+    </tr>
+	<tr>
+		<td rowspan=2 colspan=4>
+			<div id="heatMapContainer" style="height: 400px; min-width: 310px; max-width: 800px; margin: 0 auto"></div>
+		</td>
+		<td style="border:0px solid black;vertical-align:top;width:150px">
+			<b>period covered:</b>
+			<br><br>
+			From:
+			<br>
+			<input type="text" class="inputField" id="fromDateHeatMap" value="">
+			<br>
+			To:
+			<br>
+			<input type="text" class="inputField" id="toDateHeatMap" value="">
+			<br><br>
+			<b>Granulatiry:</b>
+			<br><br>
+			<select id="granulatiry" class="box">
+					<option value="hourly">Hourly</option>
+					<option value="daily">Daily</option>
+					<option value="weekly">Weekly</option>
+					<option value="monthly">Monthly</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<div align="right" class="btn-group screen;" role="group" aria-label="...">
+				<button type="button" id="cancelBtn" class="btn btn-default">Update</button>
+			</div>
+		</td>
+	</tr>
+</table>

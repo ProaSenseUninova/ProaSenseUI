@@ -1,0 +1,135 @@
+<table class="screenTable" >
+	<tbody>
+		<tr>
+			<td width="150px">
+				Name
+			</td>
+			<td colspan="5">
+				<input style="width: 100%" id="name" type="textbox"/>
+			</td>
+		</tr>
+		<tr>
+			<td width="150px">
+				Description
+			</td>
+			<td colspan="5">
+				<input style="width: 100%" id="description" type="textbox"/>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Calculation
+			</td>											
+			<td>
+				<select id="selBox1" class="box">
+					<option value="indicators">Indicators</option>
+					<option value="humanSensors">Human Sensors</option>
+					<option value="swSensors">SW Sensors</option>
+				</select>
+			</td>
+			<td>
+				&nbsp;
+			</td>
+			<td>
+				<select id="selBox2" class="box">
+					<option value="indicators">Indicators</option>
+					<option value="humanSensors">Human Sensors</option>
+					<option value="swSensors">SW Sensors</option>
+				</select>												
+			</td>
+			<td>
+				&nbsp;
+			</td>
+			<td>
+				<select id="selBox3" class="box">
+					<option value="indicators">Indicators</option>
+					<option value="humanSensors">Human Sensors</option>
+					<option value="swSensors">SW Sensors</option>
+				</select>												
+			</td>												
+		</tr>
+		<tr>
+			<td>
+				&nbsp;													
+			</td>												
+			<td>
+				<select id="listBox1" multiple="" class="box">
+					<option value="goodParts">Good parts</option>
+					<option value="badParts">Bad parts</option>
+					<option value="quality">Quality</option>
+					<option value="performance">Performance</option>
+				</select>	
+
+			</td>
+			<td>
+				<select id="arBox1">
+					<option value="times">*</option>
+					<option value="divide">/</option>
+					<option value="plus">+</option>
+					<option value="minus">-</option>
+				</select>													
+			</td>
+			<td>
+				<select id="listBox2" multiple="" class="box">
+					<option value="goodParts">Good parts</option>
+					<option value="badParts">Bad parts</option>
+					<option value="quality">Quality</option>
+					<option value="performance">Performance</option>
+				</select>														
+			</td>
+			<td>
+				<select id="arBox2">
+					<option value="times">*</option>
+					<option value="divide">/</option>
+					<option value="plus">+</option>
+					<option value="minus">-</option>
+				</select>													
+			</td>
+			<td>
+				<select id="listBox3" multiple="" class="box">
+					<option value="goodParts">Good parts</option>
+					<option value="badParts">Bad parts</option>
+					<option value="quality">Quality</option>
+					<option value="performance">Performance</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Sampling Rate
+			</td>												
+			<td>
+				<input id="samplingRate" type="textbox">
+			</td>
+			<td colspan="2">
+				<select id="timeType">
+					<option value="weeks">Weeks</option>
+					<option value="days">Days</option>
+					<option value="hours">Hours</option>
+					<option value="minutes">Minutes</option>
+				</select>
+			</td>
+			<td colspan="2">&nbsp;
+			</td>
+		</tr>
+	</tbody>
+</table>
+<br>
+<div align="left">Contextual Information</div>
+<table class="bottomTable containerColor2">
+	<tr>
+		<td>
+			<form id="contextualInformation">
+				<input type="checkbox" value="productType">Product type<br>
+				<input type="checkbox" value="technology">Technology<br>
+				<input type="checkbox" value="machine">Machine<br>
+				<input type="checkbox" value="worker">Worker<br>
+			</form>
+		</td>
+	</tr>
+</table>
+<br>
+<div align="right" class="btn-group screen;" role="group" aria-label="...">
+	<button type="button" id="cancelBtn" class="btn btn-default">Cancel</button>
+	<button type="button" id="saveBtn" class="btn btn-default">Save</button>
+</div>
