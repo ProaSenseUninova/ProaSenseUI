@@ -721,14 +721,14 @@ function ScreenGraph(kpiInfo) {
 
     this.adjustGraph = function() {
         var chart = $('#chart')
-        if (chart.chart('config').features !== undefined) {
+        if (this.graphData!== undefined) {
             chart.find('svg').attr('width', 0);
             chart.chart();
             chart.find('svg').attr('width', 400);
             chart.chart('config').features.legend.x = $('#chart').width() - 100;
             chart.chart();
             var series = $.elycharts.templates['line_basic_1'].series;
-            var len = countProperties(series);
+            var len = this.graphData.data.length;
             var objs = $('#chart').find('[fill="none"]');
             for (var i = 0; i < len; i++) {
                 var color = series['serie' + (i + 1)].color;
@@ -737,10 +737,10 @@ function ScreenGraph(kpiInfo) {
         }
     }
     this.adjustHeatMap = function() {
-        if (scrGraph.heatMap !== undefined) {
-            $('#heatMap').empty();
-            scrGraph.heatMap(scrGraph.datasets[0]);
-        }
+		if(this.heatMapData!==undefined)
+		{
+			this.initializeHeatMap(this.heatMapData);
+		}
     }
 
     $(window).resize(function() {
@@ -818,8 +818,22 @@ function ScreenGraph(kpiInfo) {
     this.openScreen = function(id) {
 
         $('.content').html(this.content);
-        this.initializeGraph();
-
+        $.ajax({
+			url:restAddress+"func/getGraphData",
+			type:"GET",
+			success:function(graphData)
+			{
+				scr.initializeGraph(graphData);
+			},
+		});
+		$.ajax({
+			url:restAddress + "func/getHeatMapData",
+			type:"GET",
+			success:function(heatMapData)
+			{
+				scr.initializeHeatMap(heatMapData)
+			}
+		});
         var radios = $('#graphTable').find('td').slice(0, 4);
         var checkBoxes = $('#heatMapTable').find('td').slice(0, 4);
 
@@ -888,14 +902,262 @@ function ScreenGraph(kpiInfo) {
 
     }
 
+	/**
+	 * numSeries: Number of series in the graph;
+	 * numValuesPerSerie: Number of points in each serie in the graph (only relevant when values are passed as Input A;
+	 * Input A: Receives individual numbers in following format: 1,2,34,12.2,...
+	 * Input B: Receives sets of values in the following format: [1,2,34,12.2,...]
+	 *
+	 * Output: Formatted series for the graph as an object as: serieN:[1,2,34,12.2,...]
+	**/
+	this.graphSeriesValues = function(seriesData) {
+		var graphSeries = {};
+
+		if (typeof(seriesData)=="object"){
+			console.log("Received values as objects. Each a set of numbers (aka serie).");
+			for (var i=0; i<seriesData.length;i++){
+				graphSeries["serie"+(i+1)] = seriesData[i];
+			}
+		}
+		else
+			console.log("Sorry. No valid values. Neither numbers or objects in the right format received.");
+
+		return graphSeries;
+	}
+
+
     this.closeScreen = function() {
         showScreen(false);
         $('.content').html('');
         this.disconnect();
     }
-    this.initializeGraph = function() {
+    
+    this.initializeHeatMap = function(heatMapData)
+    {
+		this.heatMapData = heatMapData;
+		var factor = heatMapData.xLabels.length/6;
+		$('#heatMap').empty();
+		$('#heatMap').width(0);
+		var containerWidth = $('#heatMapTable').find('td').eq(4).width();
+		var width = containerWidth < 550*factor ? 550*factor : containerWidth > 800*factor ? 800*factor : containerWidth;
+		$('#heatMap').width(width);
+		var margin = {
+				top: 30,
+				right: 0,
+				bottom: 50,
+				left: 80
+			},
+			height = (201 - margin.top - margin.bottom)*heatMapData.yLabels.length,
+			gridSize = Math.floor(width / (heatMapData.xLabels.length+1)),
+			gridHeight = 118,
+			legendElementWidth = gridSize,
+			buckets = 9,
+			colors = generateColor("#FFFFFF", "F7A35C", 18); // alternatively colorbrewer.YlGnBu[9]
 
+		var svg = d3.select("#heatMap").append("svg")
+			.attr("width", width)
+			.attr("height", height + margin.top + margin.bottom)
+			.append("g")
+			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+		var yLabels = svg.selectAll(".dayLabel")
+			.data(heatMapData.yLabels)
+			.enter().append("text")
+			.text(function(d) {
+				return d;
+			})
+			.attr("x", 0)
+			.attr("y", function(d, i) {
+				return i * gridHeight;
+			})
+			.style("text-anchor", "end")
+			.attr("transform", "translate(-6," + gridSize /1.5 + ")")
+			.attr("class", function(d, i) {
+				return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-workweek" : "dayLabel mono axis");
+			});
+
+		var xLabels = svg.selectAll(".timeLabel")
+			.data( heatMapData.xLabels)
+			.enter().append("text")
+			.text(function(d) {
+				return d;
+			})
+			.attr("x", function(d, i) {
+				return i * gridSize;
+			})
+			.attr("y", 0)
+			.style("text-anchor", "middle")
+			.attr("transform", "translate(" + gridSize / 2 + ", -6)")
+			.attr("class", function(d, i) {
+				return ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-worktime" : "timeLabel mono axis");
+			});
+
+		var colorScale = d3.scale.quantile()
+			.domain([0, buckets - 1, d3.max(heatMapData.data, function(d) {
+				return d.value;
+			})])
+			.range(colors);
+
+		var cards = svg.selectAll(".hour")
+			.data(heatMapData.data, function(d) {
+				return d.varY + ':' + d.varX;
+			});
+
+		cards.append("title");
+
+		cards.enter().append("rect")
+			.attr("x", function(d) {
+				return (d.varX - 1) * gridSize;
+			})
+			.attr("y", function(d) {
+				return (d.varY - 1) * gridHeight;
+			})
+			.attr("rx", 4)
+			.attr("ry", 4)
+			.attr("class", "hour bordered")
+			.attr("width", gridSize)
+			.attr("height", gridHeight)
+			.style("fill", colors[0]);
+
+		cards.transition().duration(1000)
+			.style("fill", function(d) {
+				return colorScale(d.value);
+			});
+
+		cards.select("title").text(function(d) {
+			return d.value;
+		});
+
+		cards.exit().remove();
+		var colorScales = [];
+		var colorsLegend = [];
+		for (var j = 0; j < colorScale.quantiles().length; j++) {
+			if (j % 4 == 0) {
+				colorScales.push(colorScale.quantiles()[j]);
+				colorsLegend.push(colors[j]);
+			}
+		}
+		colorsLegend.push(colors[colors.length - 1]);
+
+		var legend = svg.selectAll(".legend")
+			.data([0].concat(colorScales), function(d) {
+				return d;
+			});
+
+		legend.enter().append("g")
+			.attr("class", "legend");
+		legend.append("rect")
+			.attr("x", function(d, i) {
+				return legendElementWidth*factor * i;
+			})
+			.attr("y", height + margin.top - 30)
+			.attr("width", legendElementWidth*factor)
+			.attr("height", gridHeight / 6)
+			.style("fill", function(d, i) {
+				return colorsLegend[i];
+			});
+
+		legend.append("text")
+			.attr("class", "mono")
+			.text(function(d) {
+				return "≥ " + Math.round(d);
+			})
+			.attr("x", function(d, i) {
+				return legendElementWidth*factor * i;
+			})
+			.attr("y", height + gridHeight - 80);
+		var fillColor = "";
+		legend.exit().remove();
+		$('rect').hover(function() {
+				fillColor = $(this).css('fill');
+				$(this).css('fill', '#AFE8FF');
+			},
+			function() {
+				$(this).css('fill', fillColor);
+			});
+
+		var KPIName = "";
+		for (var i = 0; i < scr.kpiInfo.length; i++) {
+			if (scr.kpiInfo[i].id == loadedKpi) {
+				KPIName = scr.kpiInfo[i].name;
+				break;
+			}
+		}
+		$('#heatMapTitle').html('<h4>' + heatMapData.title + '</h4>' + (heatMapData.subTitle!==undefined?'<h5>'+heatMapData.subTitle+'</h5>':''));	
+	}
+    
+    this.initializeGraph = function(graphData) {
+		this.graphData = graphData;
         // KPI Chart
+        var len = graphData.data.length;
+		$.elycharts.templates['line_basic_1'] = {
+			type: "line",
+			margins: [10, 110, 20, 50],
+			defaultSeries: {
+				plotProps: {
+					"stroke-width": 4
+				},
+				dot: true,
+				dotProps: {
+					stroke: "white",
+					"stroke-width": 2
+				}
+			},
+			series: {
+				serie1: {
+					color: "#7CB5EC"
+				},
+				serie2: {
+					color: "#000000"
+				},
+				serie3: {
+					color: "#90ED7D"
+				},
+				serie4: {
+					color: "#F7A35C"
+				},
+				serie5: {
+					color: "#8085E9"
+				},
+				serie6: {
+					color: "#CC0000"
+				},
+				serie7: {
+					color: "#009999"
+				},
+				serie8: {
+					color: "#9900CC"
+				},
+
+
+			},
+			defaultAxis: {
+				labels: true
+			},
+			features: {
+				grid: {
+					draw: [true, false],
+					props: {
+						"stroke-dasharray": "-"
+					}
+				},
+				legend: {
+					horizontal: false,
+					width: 190,
+					height: 13*len,
+					x: 700,
+					y: 330-13*len,
+					dotProps: {
+						stroke: "black",
+						"stroke-width": 0
+					},
+					borderProps: {
+						opacity: 0.0,
+						"stroke-width": 0
+					}
+				}
+			}
+		};
         $(function() {
             $.elycharts.templates["line_basic_1"].features.legend.x = $('#chart').width() - 100;
             $("#chart").chart({
@@ -903,14 +1165,9 @@ function ScreenGraph(kpiInfo) {
                 tooltips: function(serieId, valueIndex, allValues, singleValue) {
                     return 'Value: ' + singleValue
                 },
-                legend: ["Global", "Machine 1", "Machine 2", "Machine 3", "Machine 4"],
-                labels: ["December", "January", "February", "March", "April", "May"],
-                values: graphSeriesValues(5, 6,
-                    10.63, 5.95, 4.93, 9.06, 5.95, 6.30,
-                    15.49, 11.31, 3.10, 16.36, 0.70, 0.22,
-                    13.40, 13.87, 0.25, 8.80, 9.17, 0.56,
-                    7.05, 3.68, 9.10, 4.58, 7.33, 9.40,
-                    1.41, 0.19, 2.04, 7.57, 2.71, 6.46),
+                legend: graphData.legend,
+                labels: graphData.labels,
+                values: scr.graphSeriesValues(graphData.data),
                 defaultSeries: {
                     fill: false,
                     stacked: false,
@@ -925,185 +1182,28 @@ function ScreenGraph(kpiInfo) {
                 }
             });
             var series = $.elycharts.templates['line_basic_1'].series;
-            var len = countProperties(series);
             var objs = $('#chart').find('[fill="none"]');
             for (var i = 0; i < len; i++) {
                 var color = series['serie' + (i + 1)].color;
                 objs.eq(i + objs.length - len).attr('fill', color);
             }
 
-            scr.datasets = ["plotData/heatMapData.tsv"]
+			var KPIName = "";
+			for (var i = 0; i < scr.kpiInfo.length; i++) {
+				if (scr.kpiInfo[i].id == loadedKpi) {
+					KPIName = scr.kpiInfo[i].name;
+					break;
+				}
+			}
 
-
-
-
-            scr.heatMap = function(tsvFile) {
-                d3.tsv(tsvFile,
-                    function(d) {
-                        return {
-                            shft: +d.shft,
-                            product: +d.product,
-                            value: +d.value
-                        };
-                    },
-                    function(error, data) {
-                        $('#heatMap').width(0);
-                        var containerWidth = $('#heatMapTable').find('td').eq(4).width();
-                        var width = containerWidth < 550 ? 550 : containerWidth > 800 ? 800 : containerWidth;
-                        $('#heatMap').width(width);
-                        var margin = {
-                                top: 30,
-                                right: 0,
-                                bottom: 50,
-                                left: 80
-                            },
-                            height = 450 - margin.top - margin.bottom,
-                            gridSize = Math.floor(width / 7),
-                            gridHeight = 118,
-                            legendElementWidth = gridSize,
-                            buckets = 9,
-                            colors = generateColor("#FFFFFF", "F7A35C", 18), // alternatively colorbrewer.YlGnBu[9]
-                            shifts = ["Evening", "Afternoon", "Moorning"],
-                            products = ["Product A", "Product B", "Product C", "Product D", "product E", "Product F"];
-
-                        var svg = d3.select("#heatMap").append("svg")
-                            .attr("width", width)
-                            .attr("height", height + margin.top + margin.bottom)
-                            .append("g")
-                            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-                        var dayLabels = svg.selectAll(".dayLabel")
-                            .data(shifts)
-                            .enter().append("text")
-                            .text(function(d) {
-                                return d;
-                            })
-                            .attr("x", 0)
-                            .attr("y", function(d, i) {
-                                return i * gridHeight;
-                            })
-                            .style("text-anchor", "end")
-                            .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
-                            .attr("class", function(d, i) {
-                                return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-workweek" : "dayLabel mono axis");
-                            });
-
-                        var timeLabels = svg.selectAll(".timeLabel")
-                            .data(products)
-                            .enter().append("text")
-                            .text(function(d) {
-                                return d;
-                            })
-                            .attr("x", function(d, i) {
-                                return i * gridSize;
-                            })
-                            .attr("y", 0)
-                            .style("text-anchor", "middle")
-                            .attr("transform", "translate(" + gridSize / 2 + ", -6)")
-                            .attr("class", function(d, i) {
-                                return ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-worktime" : "timeLabel mono axis");
-                            });
-
-                        var colorScale = d3.scale.quantile()
-                            .domain([0, buckets - 1, d3.max(data, function(d) {
-                                return d.value;
-                            })])
-                            .range(colors);
-
-                        var cards = svg.selectAll(".hour")
-                            .data(data, function(d) {
-                                return d.shft + ':' + d.product;
-                            });
-
-                        cards.append("title");
-
-                        cards.enter().append("rect")
-                            .attr("x", function(d) {
-                                return (d.product - 1) * gridSize;
-                            })
-                            .attr("y", function(d) {
-                                return (d.shft - 1) * gridHeight;
-                            })
-                            .attr("rx", 4)
-                            .attr("ry", 4)
-                            .attr("class", "hour bordered")
-                            .attr("width", gridSize)
-                            .attr("height", gridHeight)
-                            .style("fill", colors[0]);
-
-                        cards.transition().duration(1000)
-                            .style("fill", function(d) {
-                                return colorScale(d.value);
-                            });
-
-                        cards.select("title").text(function(d) {
-                            return d.value;
-                        });
-
-                        cards.exit().remove();
-                        var colorScales = [];
-                        var colorsLegend = [];
-                        for (var j = 0; j < colorScale.quantiles().length; j++) {
-                            if (j % 4 == 0) {
-                                colorScales.push(colorScale.quantiles()[j]);
-                                colorsLegend.push(colors[j]);
-                            }
-                        }
-                        colorsLegend.push(colors[colors.length - 1]);
-
-                        var legend = svg.selectAll(".legend")
-                            .data([0].concat(colorScales), function(d) {
-                                return d;
-                            });
-
-                        legend.enter().append("g")
-                            .attr("class", "legend");
-                        legend.append("rect")
-                            .attr("x", function(d, i) {
-                                return legendElementWidth * i;
-                            })
-                            .attr("y", height + margin.top - 30)
-                            .attr("width", legendElementWidth)
-                            .attr("height", gridHeight / 6)
-                            .style("fill", function(d, i) {
-                                return colorsLegend[i];
-                            });
-
-                        legend.append("text")
-                            .attr("class", "mono")
-                            .text(function(d) {
-                                return "≥ " + Math.round(d);
-                            })
-                            .attr("x", function(d, i) {
-                                return legendElementWidth * i;
-                            })
-                            .attr("y", height + gridHeight - 80);
-                        var fillColor = "";
-                        legend.exit().remove();
-                        $('rect').hover(function() {
-                                fillColor = $(this).css('fill');
-                                $(this).css('fill', '#AFE8FF');
-                            },
-                            function() {
-                                $(this).css('fill', fillColor);
-                            });
-
-                    });
-            };
-
-            scr.heatMap(scr.datasets[0]);
-            var KPIName = "";
-            for (var i = 0; i < scr.kpiInfo.length; i++) {
-                if (scr.kpiInfo[i].id == loadedKpi) {
-                    KPIName = scr.kpiInfo[i].name;
-                    break;
-                }
-            }
-
-            $('#chartTitle').html('<h4>' + KPIName + '</h4><h5>Source: use case data</h5>');
-            $('#heatMapTitle').html('<h4>' + KPIName + ' per shift per product</h4>');
+            $('#chartTitle').html('<h4>' + graphData.title + '</h4>' + (graphData.subTitle!==undefined?'<h5>'+graphData.subTitle+'</h5>':''));
+            
 
         });
+        if($('#graphTable').width()!=$('#page-content-wrapper').width())
+        {
+			this.adjustGraph();
+		}
 
     };
 
@@ -1280,37 +1380,3 @@ function ScreenQuery() {
     }
 }
 
-/**
- * numSeries: Number of series in the graph;
- * numValuesPerSerie: Number of points in each serie in the graph (only relevant when values are passed as Input A;
- * Input A: Receives individual numbers in following format: 1,2,34,12.2,...
- * Input B: Receives sets of values in the following format: [1,2,34,12.2,...]
- *
- * Output: Formatted series for the graph as an object as: serieN:[1,2,34,12.2,...]
-**/
-function graphSeriesValues(numSeries, numValuesPerSerie) {
-    var graphSeries = {};
-
-    if (typeof(arguments[2]) == "number"){
-        console.log("Received values as individual numbers. ");
-        for (var i=0; i<numSeries;i++){
-            var serie=[];
-            var values = [];
-            for (var j=0; j<numValuesPerSerie;j++){
-                serie[j] = arguments[2+i*numValuesPerSerie+j];
-            }
-
-            graphSeries["serie"+(i+1)] = serie;
-        }
-    }
-    else if (typeof (arguments[2]) == "object"){
-        console.log("Received values as objects. Each a set of numbers (aka serie).");
-        for (var i=2; i<arguments.length;i++){
-            graphSeries["serie"+(i-1)] = arguments[i];
-        }
-    }
-    else
-        console.log("Sorry. No valid values. Neither numbers or objects in the right format received.");
-
-    return graphSeries;
-}
