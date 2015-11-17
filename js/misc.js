@@ -1,4 +1,4 @@
-var socketIOAddress = 'http://89.216.116.44:1030'
+var socketIOAddress = 'http://proasense.no-ip.biz:8030'
 var restAddress = 'data/';
 
 //For IE
