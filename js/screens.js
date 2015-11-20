@@ -788,7 +788,6 @@ function ScreenGraph(kpiInfo) {
 			}
 		});
 	}
-	
     this.connect = function() {
         if (this.socket !== undefined) {
             this.socket.disconnect();
