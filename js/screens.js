@@ -756,7 +756,7 @@ function ScreenGraph(kpiInfo) {
         var graphGranularity = $('#granularityChart').val();
 
         $.ajax({
-			url:restAddress+"func/getGraphData?contextualInformation="+graphContextualInformation+"&startTime="+graphStartTime+"&endTime="+graphEndTime+"&granularity="+graphGranularity,
+			url:restAddress+"func/getGraphData?kpiId="+loadedKpi+"&contextualInformation="+graphContextualInformation+"&startTime="+graphStartTime+"&endTime="+graphEndTime+"&granularity="+graphGranularity,
 			type:"GET",
 			success:function(graphData)
 			{
@@ -780,7 +780,7 @@ function ScreenGraph(kpiInfo) {
 		var heatMapEndTime = $('#toDateHeatMap').handleDtpicker('getDate').getTime();
 		var heatMapGranularity = $('#granularityHeatMap').val()
 		$.ajax({
-			url:restAddress + "func/getHeatMapData?contextualInformation="+heatMapContextualInformation+"&startTime="+heatMapStartTime+"&endTime="+heatMapEndTime+"&granularity="+heatMapGranularity,
+			url:restAddress + "func/getHeatMapData?kpiId="+loadedKpi+"&contextualInformation="+heatMapContextualInformation+"&startTime="+heatMapStartTime+"&endTime="+heatMapEndTime+"&granularity="+heatMapGranularity,
 			type:"GET",
 			success:function(heatMapData)
 			{
@@ -887,7 +887,7 @@ function ScreenGraph(kpiInfo) {
             scr.updateHeatMap();
         });
         $.ajax({
-			url:restAddress+"func/getGraphData?contextualInformation="+graphContextualInformation+"&startTime="+graphStartTime+"&endTime="+graphEndTime+"&granularity="+graphGranularity,
+			url:restAddress+"func/getGraphData?kpiId="+loadedKpi+"&contextualInformation="+graphContextualInformation+"&startTime="+graphStartTime+"&endTime="+graphEndTime+"&granularity="+graphGranularity,
 			type:"GET",
 			success:function(graphData)
 			{
@@ -899,7 +899,7 @@ function ScreenGraph(kpiInfo) {
 		var heatMapEndTime = (new Date()).getTime() 
 		var heatMapGranularity = $('#granularityHeatMap').val()
 		$.ajax({
-			url:restAddress + "func/getHeatMapData?contextualInformation="+heatMapContextualInformation+"&startTime="+heatMapStartTime+"&endTime="+heatMapEndTime+"&granularity="+heatMapGranularity,
+			url:restAddress + "func/getHeatMapData?kpiId="+loadedKpi+"&contextualInformation="+heatMapContextualInformation+"&startTime="+heatMapStartTime+"&endTime="+heatMapEndTime+"&granularity="+heatMapGranularity,
 			type:"GET",
 			success:function(heatMapData)
 			{
