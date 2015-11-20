@@ -25,7 +25,7 @@
 </table>
 <table  id="graphTable" class="containerColor chartTable" width="100%">
 	<tr>
-		<form id="radioForm" action="">
+		<form id="chartSelector" action="">
 			<td data-cInfo="context_product">
 				<input type="radio" name="type" value="Product">
 				Product
@@ -66,7 +66,7 @@
 			<br><br>
 			<b>Granulatiry:</b>
 			<br><br>
-			<select id="granulatiry" class="box">
+			<select id="granularityChart" class="box">
 				<option value="hourly">Hourly</option>
 				<option value="daily">Daily</option>
 				<option value="weekly">Weekly</option>
@@ -77,7 +77,7 @@
 	<tr>
 		<td>
 			<div align="right" class="btn-group screen;" role="group" aria-label="...">
-				<button type="button" id="cancelBtn" class="btn btn-default">Update</button>
+				<button type="button" id="graphButton"  class="btn btn-default">Update</button>
 			</div>
 		</td>
 	</tr>
@@ -86,24 +86,24 @@
 <div align="left">Contextual Information</div>
 <table id="heatMapTable" class="containerColor chartTable"  width="100%">
 	<tr>
-		<form id="checkBoxForm" action="">
+		<form id="heatMapSelector" action="">
 			<td  data-cInfo="context_product">
-				<input type="CheckBox">
+				<input value="product" type="CheckBox">
 				Product
 				<br>
 			</td>
 			<td data-cInfo="context_machine">
-				<input type="CheckBox">
+				<input value="machine" type="CheckBox">
 				Machine
 				<br>
 			</td>
 			<td data-cInfo="context_shift">
-				<input type="CheckBox">
+				<input value="shift" type="CheckBox">
 				Shift
 				<br>
 			</td>
 			<td data-cInfo="context_mould">
-				<input type="CheckBox">
+				<input value="mould" type="CheckBox">
 				Mould
 				<br>
 			</td>
@@ -127,7 +127,7 @@
 			<br><br>
 			<b>Granulatiry:</b>
 			<br><br>
-			<select id="granulatiry" class="box">
+			<select id="granularityHeatMap" class="box">
 				<option value="hourly">Hourly</option>
 				<option value="daily">Daily</option>
 				<option value="weekly">Weekly</option>
@@ -138,9 +138,8 @@
 	<tr>
 		<td>
 			<div align="right" class="btn-group screen;" role="group" aria-label="...">
-				<button type="button" id="cancelBtn" class="btn btn-default">Update</button>
+				<button type="button" id="heatMapButton" class="btn btn-default">Update</button>
 			</div>
 		</td>
 	</tr>
 </table>
-

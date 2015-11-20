@@ -749,7 +749,46 @@ function ScreenGraph(kpiInfo) {
 
     });
 
+	this.updateGraph = function() {
+        var graphContextualInformation = $('#graphTable').find('input:checked').val();
+        var graphStartTime = $('#fromDateChart').handleDtpicker('getDate').getTime();
+        var graphEndTime = $('#toDateChart').handleDtpicker('getDate').getTime();
+        var graphGranularity = $('#granularityChart').val();
 
+        $.ajax({
+			url:restAddress+"func/getGraphData?contextualInformation="+graphContextualInformation+"&startTime="+graphStartTime+"&endTime="+graphEndTime+"&granularity="+graphGranularity,
+			type:"GET",
+			success:function(graphData)
+			{
+				scr.initializeGraph(graphData);
+			},
+		});
+	}
+	this.updateHeatMap = function() {
+		var heatMapContextualInformation='[';
+		var inputs = $('#heatMapTable').find('input:checked');
+		for(var i=0;i<inputs.length;i++)
+		{
+			heatMapContextualInformation=heatMapContextualInformation+inputs.eq(i).val();
+			if(i<inputs.length-1)
+			{
+				heatMapContextualInformation=heatMapContextualInformation+',';
+			}
+		}
+		heatMapContextualInformation=heatMapContextualInformation+']';
+		var heatMapStartTime =  $('#fromDateHeatMap').handleDtpicker('getDate').getTime();
+		var heatMapEndTime = $('#toDateHeatMap').handleDtpicker('getDate').getTime();
+		var heatMapGranularity = $('#granularityHeatMap').val()
+		$.ajax({
+			url:restAddress + "func/getHeatMapData?contextualInformation="+heatMapContextualInformation+"&startTime="+heatMapStartTime+"&endTime="+heatMapEndTime+"&granularity="+heatMapGranularity,
+			type:"GET",
+			success:function(heatMapData)
+			{
+				scr.initializeHeatMap(heatMapData)
+			}
+		});
+	}
+	
     this.connect = function() {
         if (this.socket !== undefined) {
             this.socket.disconnect();
@@ -818,25 +857,8 @@ function ScreenGraph(kpiInfo) {
     this.openScreen = function(id) {
 
         $('.content').html(this.content);
-        $.ajax({
-			url:restAddress+"func/getGraphData",
-			type:"GET",
-			success:function(graphData)
-			{
-				scr.initializeGraph(graphData);
-			},
-		});
-		$.ajax({
-			url:restAddress + "func/getHeatMapData",
-			type:"GET",
-			success:function(heatMapData)
-			{
-				scr.initializeHeatMap(heatMapData)
-			}
-		});
         var radios = $('#graphTable').find('td').slice(0, 4);
-        var checkBoxes = $('#heatMapTable').find('td').slice(0, 4);
-
+        var checkBoxes = $('#heatMapTable').find('td').slice(0, 4);        
         if (arguments.length > 0) {
             for (var i = 0; i < this.kpiInfo.length; i++) {
                 if (this.kpiInfo[i].id == id) {
@@ -854,6 +876,39 @@ function ScreenGraph(kpiInfo) {
                 }
             }
         }
+        console.log($('#graphTable').find('input:checked').val());
+        var graphContextualInformation = $('#graphTable').find('input:checked').val();
+        var graphStartTime = (new Date()).getTime() - 3*30*24*60*60*1000; //3 Months ago
+        var graphEndTime = (new Date()).getTime() 
+        var graphGranularity = $('#granularityChart').val();
+        $('#graphButton').on('click', function(event) {
+            scr.updateGraph();
+        });
+        $('#heatMapButton').on('click', function(event) {
+            scr.updateHeatMap();
+        });
+        $.ajax({
+			url:restAddress+"func/getGraphData?contextualInformation="+graphContextualInformation+"&startTime="+graphStartTime+"&endTime="+graphEndTime+"&granularity="+graphGranularity,
+			type:"GET",
+			success:function(graphData)
+			{
+				scr.initializeGraph(graphData);
+			},
+		});
+		var heatMapContextualInformation='[]'
+		var heatMapStartTime = (new Date()).getTime() - 3*30*24*60*60*1000; //3 Months ago
+		var heatMapEndTime = (new Date()).getTime() 
+		var heatMapGranularity = $('#granularityHeatMap').val()
+		$.ajax({
+			url:restAddress + "func/getHeatMapData?contextualInformation="+heatMapContextualInformation+"&startTime="+heatMapStartTime+"&endTime="+heatMapEndTime+"&granularity="+heatMapGranularity,
+			type:"GET",
+			success:function(heatMapData)
+			{
+				scr.initializeHeatMap(heatMapData)
+			}
+		});
+
+
         this.gage = new JustGage({
             id: "gauge",
             value: 11,
