@@ -554,7 +554,7 @@ function Screen2(kpiInfo) {
                 for (var j = 0; j < this.kpiInfo.length; j++) {
                     options = options + '<option value=' + this.kpiInfo[j].id + '>' + this.kpiInfo[j].name + '</option>';
                 }
-                listRow = listRow + '<tr><td width="150px">KPI Target</td><td><select data-value="kpi_target_id">' + options + '</select></td></tr>';
+                listRow = listRow + '<tr><td width="150px">KPI Target</td><td><select data-value="id">' + options + '</select></td></tr>';
                 $('#targetList').append(listRow);
                 firstRow = firstRow + '<td>Lower bound</td><td>Upper bound</td><td colspan=2>KPI Target</td><tr>';
                 $('#targetTable').append(firstRow);
@@ -564,7 +564,7 @@ function Screen2(kpiInfo) {
                     if (kpiTargets[j].kpi_id != el.id) {
                         continue;
                     }
-                    toAppend = '<tr id=' + kpiTargets[j].kpi_target_id + '>';
+                    toAppend = '<tr id=' + kpiTargets[j].id + '>';
                     var chk = $('#contextualInformation input:checked');
                     for (var k = 0; k < chk.length; k++) {
 
@@ -572,7 +572,7 @@ function Screen2(kpiInfo) {
                         toAppend = toAppend + '<td>' + eval('get' + chk[k].name.split(' ')[0] + '(' + kpiTargets[j][chk[k].value] + ').name'); + '</td>';
                     }
                     toAppend = toAppend + '<td>' + kpiTargets[j].lower_bound + '</td><td>' + kpiTargets[j].upper_bound + '</td>';
-                    toAppend = toAppend + '<td>' + getKpi(kpiTargets[j].kpi_id).name + '</td><td width="25px" data-id=' + kpiTargets[j].kpi_target_id + ' style="cursor:pointer" align="center" title="Delete element" ><span class="glyphicon glyphicon-minus" style="color:#333333" aria-hidden="true"></span></td></tr>';
+                    toAppend = toAppend + '<td>' + getKpi(kpiTargets[j].kpi_id).name + '</td><td width="25px" data-id=' + kpiTargets[j].id + ' style="cursor:pointer" align="center" title="Delete element" ><span class="glyphicon glyphicon-minus" style="color:#333333" aria-hidden="true"></span></td></tr>';
                     $('#targetTable').append(toAppend);
                     var scr = this;
                     $('#targetTable').find('tr:last').find('td:last').click(function(e) {
@@ -607,7 +607,7 @@ function Screen2(kpiInfo) {
                     if (response.succeeded) {
                         var newTgId = response.insertId[0];
                         var newTgObj = JSON.parse(query)[0];
-                        newTgObj.kpi_target_id = newTgId;
+                        newTgObj.id = newTgId;
                         if (newTgObj.lower_bound == "") {
                             newTgObj.lower_bound = 0;
                         }
@@ -655,14 +655,14 @@ function Screen2(kpiInfo) {
         $.ajax({
             url: restAddress + 'proasense_hella/kpi_target',
             type: 'POST',
-            data: '{"type":"DELETE","data":[{"kpi_target_id":' + id + '}]}',
+            data: '{"type":"DELETE","data":[{"id":' + id + '}]}',
             success: function(response) {
                 $('#page-content-wrapper').unblock();
                 if (response.succeeded) {
                     $.notify('Target deleted', 'success');
                     element.parentElement.remove();
                     for (i = 0; i < kpiTargets.length; i++) {
-                        if (kpiTargets[i].kpi_target_id == id) {
+                        if (kpiTargets[i].id == id) {
                             kpiTargets.splice(i, 1);
                             break;
                         }
