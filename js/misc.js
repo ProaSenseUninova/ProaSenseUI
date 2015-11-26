@@ -206,7 +206,6 @@ function removeElement(delId) {
                                     }
 
                                 }
-
                                 for (var i = 0; i < kpiInfo.length; i++) {
                                     if (children.indexOf(kpiInfo[i].id.toString()) > -1) {
                                         kpiInfo[i].parent_id = parentId;
