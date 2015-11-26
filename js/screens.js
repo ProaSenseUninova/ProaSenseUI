@@ -668,7 +668,7 @@ function Screen2(kpiInfo) {
                         }
                     }
                 } else {
-                    $.notify('Error');
+                    $.notify('Error deleting target');
                 }
             }
         });
