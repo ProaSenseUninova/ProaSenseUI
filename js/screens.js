@@ -554,7 +554,7 @@ function Screen2(kpiInfo) {
                 for (var j = 0; j < this.kpiInfo.length; j++) {
                     options = options + '<option value=' + this.kpiInfo[j].id + '>' + this.kpiInfo[j].name + '</option>';
                 }
-                listRow = listRow + '<tr><td width="150px">KPI Target</td><td><select data-value="id">' + options + '</select></td></tr>';
+                listRow = listRow + '<tr><td width="150px">KPI Target</td><td><select id="kpiList" data-value="id">' + options + '</select></td></tr>';
                 $('#targetList').append(listRow);
                 firstRow = firstRow + '<td>Lower bound</td><td>Upper bound</td><td colspan=2>KPI Target</td><tr>';
                 $('#targetTable').append(firstRow);

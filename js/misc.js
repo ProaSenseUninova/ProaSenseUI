@@ -182,6 +182,7 @@ function removeElement(delId) {
                             if (result.succeeded) {
                                 var tree = $('#KPITree').jstree();
                                 $.notify('Kpi deleted', 'success');
+                                $('#kpiList option[value='+delId+']').remove();
                                 if (loadedKpi == delId) {
                                     activeScreen.closeScreen();
                                 }
