@@ -712,6 +712,13 @@ function Screen2(kpiInfo) {
 
 
 function ScreenGraph(kpiInfo) {
+    this.testGraphData =JSON.parse('{"data":['
+    +'[3,4,1,6,4,8,null,8,6,3],'
+    +'[2,5,6,2,5,6,7,6,3,9]],'
+    +'"subTitle":"Source: use case data",'
+    +'"legend":["A","B"],'
+    +'"title":"Availability",'
+    +'"labels":["December","January","February","March","April","May"]}');
     this.kpiInfo = kpiInfo;
     var scr = this;
     $.get('inc/screengraph.inc', function(content) {
@@ -753,15 +760,15 @@ function ScreenGraph(kpiInfo) {
         var graphStartTime = $('#fromDateChart').handleDtpicker('getDate').getTime();
         var graphEndTime = $('#toDateChart').handleDtpicker('getDate').getTime();
         var graphGranularity = $('#granularityChart').val();
-
-        $.ajax({
+		scr.initializeGraph(this.testGraphData);
+        /*$.ajax({
 			url:restAddress+"func/getGraphData?kpiId="+loadedKpi+"&contextualInformation="+graphContextualInformation+"&startTime="+graphStartTime+"&endTime="+graphEndTime+"&granularity="+graphGranularity,
 			type:"GET",
 			success:function(graphData)
 			{
 				scr.initializeGraph(graphData);
 			},
-		});
+		});*/
 	}
 	this.updateHeatMap = function() {
 		var heatMapContextualInformation='[';
@@ -885,14 +892,15 @@ function ScreenGraph(kpiInfo) {
         $('#heatMapButton').on('click', function(event) {
             scr.updateHeatMap();
         });
-        $.ajax({
+        this.initializeGraph(this.testGraphData);
+        /*$.ajax({
 			url:restAddress+"func/getGraphData?kpiId="+loadedKpi+"&contextualInformation="+graphContextualInformation+"&startTime="+graphStartTime+"&endTime="+graphEndTime+"&granularity="+graphGranularity,
 			type:"GET",
 			success:function(graphData)
 			{
 				scr.initializeGraph(graphData);
 			},
-		});
+		});*/
 		var heatMapContextualInformation='[]'
 		var heatMapStartTime = (new Date()).getTime() - 3*30*24*60*60*1000; //3 Months ago
 		var heatMapEndTime = (new Date()).getTime() 
@@ -1187,7 +1195,8 @@ function ScreenGraph(kpiInfo) {
 
 				},
 				defaultAxis: {
-					labels: true
+					labels: true,
+					
 				},
 				features: {
 					grid: {
