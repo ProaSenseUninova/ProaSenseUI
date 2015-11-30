@@ -1141,122 +1141,125 @@ function ScreenGraph(kpiInfo) {
 	}
     
     this.initializeGraph = function(graphData) {
-		this.graphData = graphData;
-        // KPI Chart
-        var len = graphData.data.length;
-		$.elycharts.templates['line_basic_1'] = {
-			type: "line",
-			margins: [10, 110, 20, 50],
-			defaultSeries: {
-				plotProps: {
-					"stroke-width": 4
-				},
-				dot: true,
-				dotProps: {
-					stroke: "white",
-					"stroke-width": 2
-				}
-			},
-			series: {
-				serie1: {
-					color: "#7CB5EC"
-				},
-				serie2: {
-					color: "#000000"
-				},
-				serie3: {
-					color: "#90ED7D"
-				},
-				serie4: {
-					color: "#F7A35C"
-				},
-				serie5: {
-					color: "#8085E9"
-				},
-				serie6: {
-					color: "#CC0000"
-				},
-				serie7: {
-					color: "#009999"
-				},
-				serie8: {
-					color: "#9900CC"
-				},
-
-
-			},
-			defaultAxis: {
-				labels: true
-			},
-			features: {
-				grid: {
-					draw: [true, false],
-					props: {
-						"stroke-dasharray": "-"
-					}
-				},
-				legend: {
-					horizontal: false,
-					width: 190,
-					height: 13*len,
-					x: 700,
-					y: 330-13*len,
-					dotProps: {
-						stroke: "black",
-						"stroke-width": 0
+		if(graphData.data!=null)
+		{
+			this.graphData = graphData;
+			// KPI Chart
+			var len = graphData.data.length;
+			$.elycharts.templates['line_basic_1'] = {
+				type: "line",
+				margins: [10, 110, 20, 50],
+				defaultSeries: {
+					plotProps: {
+						"stroke-width": 4
 					},
-					borderProps: {
-						opacity: 0.0,
-						"stroke-width": 0
+					dot: true,
+					dotProps: {
+						stroke: "white",
+						"stroke-width": 2
+					}
+				},
+				series: {
+					serie1: {
+						color: "#7CB5EC"
+					},
+					serie2: {
+						color: "#000000"
+					},
+					serie3: {
+						color: "#90ED7D"
+					},
+					serie4: {
+						color: "#F7A35C"
+					},
+					serie5: {
+						color: "#8085E9"
+					},
+					serie6: {
+						color: "#CC0000"
+					},
+					serie7: {
+						color: "#009999"
+					},
+					serie8: {
+						color: "#9900CC"
+					},
+
+
+				},
+				defaultAxis: {
+					labels: true
+				},
+				features: {
+					grid: {
+						draw: [true, false],
+						props: {
+							"stroke-dasharray": "-"
+						}
+					},
+					legend: {
+						horizontal: false,
+						width: 190,
+						height: 13*len,
+						x: 700,
+						y: 330-13*len,
+						dotProps: {
+							stroke: "black",
+							"stroke-width": 0
+						},
+						borderProps: {
+							opacity: 0.0,
+							"stroke-width": 0
+						}
 					}
 				}
-			}
-		};
-        $(function() {
-            $.elycharts.templates["line_basic_1"].features.legend.x = $('#chart').width() - 100;
-            $("#chart").chart({
-                template: "line_basic_1",
-                tooltips: function(serieId, valueIndex, allValues, singleValue) {
-                    return 'Value: ' + singleValue
-                },
-                legend: graphData.legend,
-                labels: graphData.labels,
-                values: scr.graphSeriesValues(graphData.data),
-                defaultSeries: {
-                    fill: false,
-                    stacked: false,
-                    highlight: {
-                        scale: 2
-                    },
-                    startAnimation: {
-                        active: true,
-                        type: "grow",
-                        easing: "bounce"
-                    }
-                }
-            });
-            var series = $.elycharts.templates['line_basic_1'].series;
-            var objs = $('#chart').find('[fill="none"]');
-            for (var i = 0; i < len; i++) {
-                var color = series['serie' + (i + 1)].color;
-                objs.eq(i + objs.length - len).attr('fill', color);
-            }
-
-			var KPIName = "";
-			for (var i = 0; i < scr.kpiInfo.length; i++) {
-				if (scr.kpiInfo[i].id == loadedKpi) {
-					KPIName = scr.kpiInfo[i].name;
-					break;
+			};
+			$(function() {
+				$.elycharts.templates["line_basic_1"].features.legend.x = $('#chart').width() - 100;
+				$("#chart").chart({
+					template: "line_basic_1",
+					tooltips: function(serieId, valueIndex, allValues, singleValue) {
+						return 'Value: ' + singleValue
+					},
+					legend: graphData.legend,
+					labels: graphData.labels,
+					values: scr.graphSeriesValues(graphData.data),
+					defaultSeries: {
+						fill: false,
+						stacked: false,
+						highlight: {
+							scale: 2
+						},
+						startAnimation: {
+							active: true,
+							type: "grow",
+							easing: "bounce"
+						}
+					}
+				});
+				var series = $.elycharts.templates['line_basic_1'].series;
+				var objs = $('#chart').find('[fill="none"]');
+				for (var i = 0; i < len; i++) {
+					var color = series['serie' + (i + 1)].color;
+					objs.eq(i + objs.length - len).attr('fill', color);
 				}
+
+				var KPIName = "";
+				for (var i = 0; i < scr.kpiInfo.length; i++) {
+					if (scr.kpiInfo[i].id == loadedKpi) {
+						KPIName = scr.kpiInfo[i].name;
+						break;
+					}
+				}
+
+				$('#chartTitle').html('<h4>' + graphData.title + '</h4>' + (graphData.subTitle!==undefined?'<h5>'+graphData.subTitle+'</h5>':''));
+				
+
+			});
+			if($('#graphTable').width()!=$('#page-content-wrapper').width())
+			{
+				this.adjustGraph();
 			}
-
-            $('#chartTitle').html('<h4>' + graphData.title + '</h4>' + (graphData.subTitle!==undefined?'<h5>'+graphData.subTitle+'</h5>':''));
-            
-
-        });
-        if($('#graphTable').width()!=$('#page-content-wrapper').width())
-        {
-			this.adjustGraph();
 		}
 
     };
