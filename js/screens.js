@@ -11,7 +11,6 @@ function openKPI() {
     //}
 }
 
-
 function openTarget() {
     scrQuery.closeScreen();
     $('.headerSelector').find('a').eq(0).attr('class', 'notSelected');
