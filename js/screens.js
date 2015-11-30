@@ -859,6 +859,8 @@ function ScreenGraph(kpiInfo) {
         }
     }
 
+
+	
     this.openScreen = function(id) {
 
         $('.content').html(this.content);
@@ -1199,6 +1201,10 @@ function ScreenGraph(kpiInfo) {
 					
 				},
 				features: {
+					mousearea:
+					{
+						onMouseClick:function(a,b,c,d){console.log(a);console.log(b);console.log(c);console.log(d)},
+					},
 					grid: {
 						draw: [true, false],
 						props: {
