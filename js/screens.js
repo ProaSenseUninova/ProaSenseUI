@@ -1080,11 +1080,21 @@ function ScreenGraph(kpiInfo) {
 		cards.append("title");
 
 		cards.enter().append("rect")
+			.attr("varX",function(d){
+				return d.varX
+			})
+			.attr("varY",function(d){
+				return d.varY
+			})
 			.attr("x", function(d) {
 				return (d.varX - 1) * gridSize;
 			})
 			.attr("y", function(d) {
 				return (d.varY - 1) * gridHeight;
+			})
+			.attr("title", function(d) {
+				$(this).tooltip({content:'Value: '+d.value});
+				return "Value: "+d.value;
 			})
 			.attr("rx", 4)
 			.attr("ry", 4)
@@ -1145,10 +1155,25 @@ function ScreenGraph(kpiInfo) {
 		$('rect').hover(function() {
 				fillColor = $(this).css('fill');
 				$(this).css('fill', '#AFE8FF');
+				var varX = parseInt(this.attributes.varX.value);
+				var varY = parseInt(this.attributes.varY.value);
+				var data = scr.heatMapData.data;
+				var value=0;
+				for(var i=0;i<data.length;i++)
+				{
+					if(data[i].varX==varX && data[i].varY==varY)
+					{
+						value=data[i].value;
+						break;
+					}
+				}
+				
+				
 			},
 			function() {
 				$(this).css('fill', fillColor);
 			});
+		
 
 		var KPIName = "";
 		for (var i = 0; i < scr.kpiInfo.length; i++) {
@@ -1260,6 +1285,10 @@ function ScreenGraph(kpiInfo) {
 					labels: graphData.labels,
 					values: scr.graphSeriesValues(graphData.data),
 					defaultSeries: {
+						tooltip:{
+							width: 75, height:25,
+							contentStyle : { "text-align":"center"}
+						},
 						fill: false,
 						stacked: false,
 						highlight: {
@@ -1288,7 +1317,7 @@ function ScreenGraph(kpiInfo) {
 					}
 				}
 
-				$('#chartTitle').html('<h4>' + graphData.title + '</h4>' + (graphData.subTitle!==undefined?'<h5>'+graphData.subTitle+'</h5>':''));
+				$('#chartTitle').html('<h4>' + graphData.a + '</h4>' + (graphData.subTitle!==undefined?'<h5>'+graphData.subTitle+'</h5>':''));
 				
 
 			});

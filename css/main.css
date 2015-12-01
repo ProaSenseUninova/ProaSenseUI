@@ -121,7 +121,11 @@
 #chart circle{
 	cursor: hand;
 }
-
+/*
+#heatMap rect{
+	cursor: hand;
+}
+*/
 .chartTable{
 	border-collapse: separate;
 	border-spacing: 5px
