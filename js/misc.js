@@ -12,6 +12,8 @@ $(function() {
     }
 });
 
+
+
 $(window).resize(function() {
 
     if ($(window).width() < 800) {
@@ -35,6 +37,23 @@ function hover(e) {
 function unhover(e) {
     var imgUrl = $(e).attr("src");
     $(e).attr("src", imgUrl.substring(0, imgUrl.length - 8) + ".png");
+}
+
+// CHANGE THE INITIAL SEED HERE
+Math.seed = 0;
+
+/**
+ * Math.seededRandom()
+ * 
+ */
+Math.seededRandom = function(max, min) {
+    max = max || 1;
+    min = min || 0;
+
+    Math.seed = (Math.seed * 9301 + 49297) % 233280;
+    var rnd = Math.seed / 233280.0;
+
+    return min + rnd * (max - min);
 }
 
 function closePane() {

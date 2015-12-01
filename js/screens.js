@@ -38,9 +38,6 @@ function Screen1(elInfo) {
 
     var scr = this;
 
-
-
-
     $.get("inc/screen1.inc", function(content) {
         scr.content = content;
     });
@@ -714,7 +711,7 @@ function Screen2(kpiInfo) {
 function ScreenGraph(kpiInfo) {
     this.testGraphData =JSON.parse('{"data":['
     +'[3,4,1,6,4,8,null,8,6,3],'
-    +'[2,5,6,2,5,6,7,6,3,9]],'
+    +'[2,5,6,2,14,6,7,6,3,9]],'
     +'"subTitle":"Source: use case data",'
     +'"legend":["A","B"],'
     +'"title":"Availability",'
@@ -724,7 +721,14 @@ function ScreenGraph(kpiInfo) {
     $.get('inc/screengraph.inc', function(content) {
         scr.content = content;
     });
-
+	this.getRandomColor = function() {
+		var letters = '0123456789ABCDEF'.split('');
+		var color = '#';
+		for (var i = 0; i < 6; i++ ) {
+			color += letters[Math.floor(Math.seededRandom(1,0) * 16)];
+		}
+		return color;
+	}
     this.adjustGraph = function() {
         var chart = $('#chart')
         if (this.graphData!== undefined) {
@@ -1203,7 +1207,12 @@ function ScreenGraph(kpiInfo) {
 				features: {
 					mousearea:
 					{
-						onMouseClick:function(a,b,c,d){console.log(a);console.log(b);console.log(c);console.log(d)},
+						onMouseClick:function(a,b,c,d){
+							var serieIndex =b.substring(5,b.length)-1;
+							var labelIndex=Math.round((c/(scr.graphData.data[serieIndex].length-1)*(scr.graphData.labels.length-1)));
+							console.log(scr.graphData.legend[serieIndex]);
+							console.log(scr.graphData.labels[labelIndex]);
+						},
 					},
 					grid: {
 						draw: [true, false],
@@ -1229,6 +1238,12 @@ function ScreenGraph(kpiInfo) {
 				}
 			};
 			$(function() {
+				console.log($.elycharts.templates["line_basic_1"]);
+				Math.seed=0;
+				for(i=9;i<=len;i++)
+				{
+					$.elycharts.templates["line_basic_1"].series['serie'+i]={'color':scr.getRandomColor()};
+				}
 				$.elycharts.templates["line_basic_1"].features.legend.x = $('#chart').width() - 100;
 				$("#chart").chart({
 					template: "line_basic_1",
@@ -1253,7 +1268,8 @@ function ScreenGraph(kpiInfo) {
 				});
 				var series = $.elycharts.templates['line_basic_1'].series;
 				var objs = $('#chart').find('[fill="none"]');
-				for (var i = 0; i < len; i++) {
+				for (var i = 0; i < len; i++) 
+				{
 					var color = series['serie' + (i + 1)].color;
 					objs.eq(i + objs.length - len).attr('fill', color);
 				}

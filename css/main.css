@@ -118,6 +118,10 @@
 	width: 200px;
 }
 
+#chart circle{
+	cursor: hand;
+}
+
 .chartTable{
 	border-collapse: separate;
 	border-spacing: 5px
