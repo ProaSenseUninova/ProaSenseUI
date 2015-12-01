@@ -7,7 +7,7 @@
 	<tr>
 		<td width=33% style="vertical-align: middle">
 			<div class="pageHeader">Total units</div>
-			<div class="pageHeader" id="totalUnits" style="color:#999">1259</div>
+			<div class="pageHeader" id="totalUnits" style="color:#999">0</div>
 		</td>
 		<td width=33% align="center" style="vertical-align: middle">
 			<div id="gauge" style="width: 150px; height: 120px;"></div>
@@ -15,9 +15,9 @@
 		<td style="vertical-align: middle;" >
 			<div class="pageHeader">OEE</div>
 			<div class="progress" style="width:60%;margin:auto">
-				<div class="progress-bar" role="progressbar" aria-valuenow="87"
-					aria-valuemin="0" aria-valuemax="100" style="width:70%">
-					87%
+				<div class="progress-bar" role="progressbar" aria-valuenow="0"
+					aria-valuemin="0" aria-valuemax="100" style="width:0%">
+					0%
 				</div>
 			</div>
 		</td>

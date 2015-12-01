@@ -866,7 +866,6 @@ function ScreenGraph(kpiInfo) {
 
 	
     this.openScreen = function(id) {
-
         $('.content').html(this.content);
         var radios = $('#graphTable').find('td').slice(0, 4);
         var checkBoxes = $('#heatMapTable').find('td').slice(0, 4);        
@@ -923,15 +922,23 @@ function ScreenGraph(kpiInfo) {
 
         this.gage = new JustGage({
             id: "gauge",
-            value: 11,
+            value: 0,
             min: 0,
             max: 100,
             titleFontColor: "#000",
             titleFontSize: 20,
             title: "Scrap rate",
         });
-
-
+        $.ajax({
+			url:restAddress+"func/getRealTimeKpis?kpiId="+loadedKpi,
+			type:"GET",
+			success:function(realTimeKpisData)
+			{
+				scr.totalUnits(realTimeKpisData.totalUnits);
+				scr.scrapRate(realTimeKpisData.scrapRate);
+				scr.oee(realTimeKpisData.oee);
+			},
+		});
         var firstDate = new Date();
         firstDate.setHours(0);
         firstDate.setMinutes(0);
@@ -1238,7 +1245,6 @@ function ScreenGraph(kpiInfo) {
 				}
 			};
 			$(function() {
-				console.log($.elycharts.templates["line_basic_1"]);
 				Math.seed=0;
 				for(i=9;i<=len;i++)
 				{
