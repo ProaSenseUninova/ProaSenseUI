@@ -1306,7 +1306,7 @@ function ScreenGraph(kpiInfo) {
 					}
 				}
 
-				$('#chartTitle').html('<h4>' + graphData.a + '</h4>' + (graphData.subTitle!==undefined?'<h5>'+graphData.subTitle+'</h5>':''));
+				$('#chartTitle').html('<h4>' + graphData.title + '</h4>' + (graphData.subTitle!==undefined?'<h5>'+graphData.subTitle+'</h5>':''));
 				
 
 			});
