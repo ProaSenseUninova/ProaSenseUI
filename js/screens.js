@@ -1155,20 +1155,6 @@ function ScreenGraph(kpiInfo) {
 		$('rect').hover(function() {
 				fillColor = $(this).css('fill');
 				$(this).css('fill', '#AFE8FF');
-				var varX = parseInt(this.attributes.varX.value);
-				var varY = parseInt(this.attributes.varY.value);
-				var data = scr.heatMapData.data;
-				var value=0;
-				for(var i=0;i<data.length;i++)
-				{
-					if(data[i].varX==varX && data[i].varY==varY)
-					{
-						value=data[i].value;
-						break;
-					}
-				}
-				
-				
 			},
 			function() {
 				$(this).css('fill', fillColor);
