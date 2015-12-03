@@ -5,10 +5,10 @@ function openKPI() {
     $('.headerSelector').find('a').eq(2).attr('class', 'notSelected');
     var isScrHidden = $('.screen').css('visibility') == "hidden";
     activeScreen = screen1;
-    //if(!isScrHidden)
-    //{
-    activeScreen.openScreen();
-    //}
+    if(!isScrHidden)
+    {
+		activeScreen.openScreen();
+    }
 }
 
 function openTarget() {
