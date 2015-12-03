@@ -899,7 +899,7 @@ function ScreenGraph(kpiInfo) {
         });
         //this.initializeGraph(this.testGraphData,true);
         $.ajax({
-			url:restAddress+"func/getGraphData?kpiId="+loadedKpi+"&contextualInformation="+graphContextualInformation+"&granularity="+graphGranularity,
+			url:restAddress+"func/getGraphData?kpiId="+loadedKpi+"&granularity="+graphGranularity,
 			type:"GET",
 			success:function(graphData)
 			{
