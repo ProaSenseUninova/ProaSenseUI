@@ -1093,7 +1093,10 @@ function ScreenGraph(kpiInfo) {
 				return (d.varY - 1) * gridHeight;
 			})
 			.attr("title", function(d) {
-				$(this).tooltip({content:'Value: '+d.value});
+				$(this).tooltip({content:'Value: '+d.value,
+					position:{at:"top-60"},
+					show:{duration:0},
+					hide:{duration:0}});
 				return "Value: "+d.value;
 			})
 			.attr("rx", 4)
