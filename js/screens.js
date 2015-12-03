@@ -764,15 +764,15 @@ function ScreenGraph(kpiInfo) {
         var graphStartTime = $('#fromDateChart').handleDtpicker('getDate').getTime();
         var graphEndTime = $('#toDateChart').handleDtpicker('getDate').getTime();
         var graphGranularity = $('#granularityChart').val();
-		scr.initializeGraph(this.testGraphData);
-        /*$.ajax({
+		//scr.initializeGraph(this.testGraphData);
+        $.ajax({
 			url:restAddress+"func/getGraphData?kpiId="+loadedKpi+"&contextualInformation="+graphContextualInformation+"&startTime="+graphStartTime+"&endTime="+graphEndTime+"&granularity="+graphGranularity,
 			type:"GET",
 			success:function(graphData)
 			{
 				scr.initializeGraph(graphData);
 			},
-		});*/
+		});
 	}
 	this.updateHeatMap = function() {
 		var heatMapContextualInformation='[';
@@ -897,15 +897,15 @@ function ScreenGraph(kpiInfo) {
         $('#heatMapButton').on('click', function(event) {
             scr.updateHeatMap();
         });
-        this.initializeGraph(this.testGraphData);
-        /*$.ajax({
-			url:restAddress+"func/getGraphData?kpiId="+loadedKpi+"&contextualInformation="+graphContextualInformation+"&startTime="+graphStartTime+"&endTime="+graphEndTime+"&granularity="+graphGranularity,
+        //this.initializeGraph(this.testGraphData,true);
+        $.ajax({
+			url:restAddress+"func/getGraphData?kpiId="+loadedKpi+"&contextualInformation="+graphContextualInformation+"&granularity="+graphGranularity,
 			type:"GET",
 			success:function(graphData)
 			{
 				scr.initializeGraph(graphData);
 			},
-		});*/
+		});
 		var heatMapContextualInformation='[]'
 		var heatMapStartTime = (new Date()).getTime() - 3*30*24*60*60*1000; //3 Months ago
 		var heatMapEndTime = (new Date()).getTime() 
@@ -1174,7 +1174,11 @@ function ScreenGraph(kpiInfo) {
 		$('#heatMapTitle').html('<h4>' + heatMapData.title + '</h4>' + (heatMapData.subTitle!==undefined?'<h5>'+heatMapData.subTitle+'</h5>':''));	
 	}
     
-    this.initializeGraph = function(graphData) {
+    this.initializeGraph = function(graphData)
+    {
+		
+
+		
 		if(graphData.data!=null)
 		{
 			this.graphData = graphData;
