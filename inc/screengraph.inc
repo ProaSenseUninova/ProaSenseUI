@@ -73,9 +73,9 @@
 			<br><br>
 			<select id="granularityChart" class="box">
 				<option value="hourly">Hourly</option>
-				<option selected value="daily">Daily</option>
+				<option value="daily">Daily</option>
 				<option value="weekly">Weekly</option>
-				<option value="monthly">Monthly</option>
+				<option selected value="monthly">Monthly</option>
 			</select>
 		</td>
 	</tr>
