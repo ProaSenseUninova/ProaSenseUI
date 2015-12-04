@@ -867,7 +867,7 @@ function ScreenGraph(kpiInfo) {
 	
     this.openScreen = function(id) {
         $('.content').html(this.content);
-        var radios = $('#graphTable').find('td').slice(0, 4);
+        var radios = $('#graphTable').find('td').slice(1, 5);
         var checkBoxes = $('#heatMapTable').find('td').slice(0, 4);        
         if (arguments.length > 0) {
             for (var i = 0; i < this.kpiInfo.length; i++) {
@@ -878,10 +878,6 @@ function ScreenGraph(kpiInfo) {
                         radios.eq(j).attr('hidden', !contains);
                         checkBoxes.eq(j).attr('hidden', !contains);
                     }
-                    radios.find('input:visible').eq(0).attr('checked', true);
-
-
-
                     break;
                 }
             }
@@ -899,7 +895,7 @@ function ScreenGraph(kpiInfo) {
         });
         //this.initializeGraph(this.testGraphData,true);
         $.ajax({
-			url:restAddress+"func/getGraphData?kpiId="+loadedKpi+"&granularity="+graphGranularity,
+			url:restAddress+"func/getGraphData?kpiId="+loadedKpi+"&contextualInformation="+graphContextualInformation+"&granularity="+graphGranularity,
 			type:"GET",
 			success:function(graphData)
 			{

@@ -23,16 +23,21 @@
 		</td>
 	</tr>
 </table>
-<table  id="graphTable" class="containerColor chartTable" width="100%">
+<table id="graphTable" class="containerColor chartTable" width="100%">
 	<tr>
 		<form id="chartSelector" action="">
+			<td data-cInfo="context_global">
+				<input type="radio" checked name="type" value="Global">
+				Global
+				<br>
+			</td>
 			<td data-cInfo="context_product">
 				<input type="radio" name="type" value="Product">
 				Product
 				<br>
 			</td>
 			<td  data-cInfo="context_machine">
-				<input type="radio" checked name="type" value="Machine">
+				<input type="radio" name="type" value="Machine">
 				Machine
 				<br>
 			</td>
@@ -49,7 +54,7 @@
 		</form>
 	</tr>
 	<tr>
-		<td id="graphCell" align="center" rowspan=2 colspan=4>
+		<td id="graphCell" align="center" rowspan=2 colspan=5>
 			<div id="chartTitle"></div>
 			<div id="chart" ></div>
 		</td>
