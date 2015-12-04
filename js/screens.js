@@ -882,7 +882,6 @@ function ScreenGraph(kpiInfo) {
                 }
             }
         }
-        console.log($('#graphTable').find('input:checked').val());
         var graphContextualInformation = $('#graphTable').find('input:checked').val();
         var graphStartTime = (new Date()).getTime() - 3*30*24*60*60*1000; //3 Months ago
         var graphEndTime = (new Date()).getTime() 
