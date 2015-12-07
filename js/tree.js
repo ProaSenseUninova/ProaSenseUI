@@ -110,6 +110,10 @@ function getKpi(id) {
 }
 
 window.onload = function() {
+	if(!restAddress.endsWith('/'))
+	{
+		restAddress=restAddress+'/';
+	}
     $.ajax({
         url: restAddress + 'proasense_hella/mould',
         type: 'GET',

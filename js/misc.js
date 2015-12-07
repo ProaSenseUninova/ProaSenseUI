@@ -1,5 +1,5 @@
-var socketIOAddress = 'http://proasense.no-ip.biz:8030'
-var restAddress = 'data/';
+var socketIOAddress = 'http://gris-groupware.uninova.pt'
+var restAddress = 'data';
 
 //For IE
 String.prototype.endsWith = function(suffix) {
@@ -275,6 +275,7 @@ function removeElement(delId) {
                         }
                     }
                 } else {
+					$('html').unblock();
                     $.notify('Error deleting formula');
                 }
 

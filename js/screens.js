@@ -805,7 +805,8 @@ function ScreenGraph(kpiInfo) {
             this.socket.disconnect();
         }
         this.socket = io(socketIOAddress, {
-            'force new connection': true
+            'force new connection': true,
+            'transports':['polling']
         });
         this.socket.on('message', function(data) {
             var KPIName = "";
