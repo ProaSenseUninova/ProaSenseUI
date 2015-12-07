@@ -711,9 +711,10 @@ function Screen2(kpiInfo) {
 function ScreenGraph(kpiInfo) {
     this.testGraphData =JSON.parse('{"data":['
     +'[3,4,1,6,4,8,null,8,6,3],'
+    +'[7,3,9,2,4,5,9,3,4,5],'
     +'[2,5,6,2,14,6,7,6,3,9]],'
     +'"subTitle":"Source: use case data",'
-    +'"legend":["A","B"],'
+    +'"legend":["A","B","C"],'
     +'"title":"Availability",'
     +'"labels":["December","January","February","March","April","May"]}');
     this.kpiInfo = kpiInfo;
@@ -1170,10 +1171,7 @@ function ScreenGraph(kpiInfo) {
 	}
     
     this.initializeGraph = function(graphData)
-    {
-		
-
-		
+    {	
 		if(graphData.data!=null)
 		{
 			this.graphData = graphData;
@@ -1264,6 +1262,7 @@ function ScreenGraph(kpiInfo) {
 					$.elycharts.templates["line_basic_1"].series['serie'+i]={'color':scr.getRandomColor()};
 				}
 				$.elycharts.templates["line_basic_1"].features.legend.x = $('#chart').width() - 100;
+				$("#chart").chart("clear");
 				$("#chart").chart({
 					template: "line_basic_1",
 					tooltips: function(serieId, valueIndex, allValues, singleValue) {
