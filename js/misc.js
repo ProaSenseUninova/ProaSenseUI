@@ -170,6 +170,11 @@ function showScreen(show) {
 }
 
 function removeElement(delId) {
+	if(newParentId==delId)
+	{
+		newParentId=null;
+		activeScreen.closeScreen();
+	}
     if (!screen1.checkConstraints(delId)) {
 	    $('html').block({
             'message': null
