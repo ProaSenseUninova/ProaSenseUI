@@ -736,15 +736,18 @@ function ScreenGraph(kpiInfo) {
             chart.find('svg').attr('width', 0);
             chart.chart();
             chart.find('svg').attr('width', 400);
-            chart.chart('config').features.legend.x = $('#chart').width() - 100;
-            chart.chart();
-            var series = $.elycharts.templates['line_basic_1'].series;
-            var len = this.graphData.data.length;
-            var objs = $('#chart').find('[fill="none"]');
-            for (var i = 0; i < len; i++) {
-                var color = series['serie' + (i + 1)].color;
-                objs.eq(i + objs.length - len).attr('fill', color);
-            }
+            if(chart.chart('config')!==false)
+            {
+				chart.chart('config').features.legend.x = $('#chart').width() - 100;
+				chart.chart();
+				var series = $.elycharts.templates['line_basic_1'].series;
+				var len = this.graphData.data.length;
+				var objs = $('#chart').find('[fill="none"]');
+				for (var i = 0; i < len; i++) {
+					var color = series['serie' + (i + 1)].color;
+					objs.eq(i + objs.length - len).attr('fill', color);
+				}
+			}
         }
     }
     this.adjustHeatMap = function() {
@@ -1174,9 +1177,9 @@ function ScreenGraph(kpiInfo) {
     
     this.initializeGraph = function(graphData)
     {	
+		this.graphData = graphData;
 		if(graphData.data!=null)
 		{
-			this.graphData = graphData;
 			// KPI Chart
 			var len = graphData.data.length;
 			$.elycharts.templates['line_basic_1'] = {
