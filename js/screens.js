@@ -1274,7 +1274,7 @@ function ScreenGraph(kpiInfo) {
 					values: scr.graphSeriesValues(graphData.data),
 					defaultSeries: {
 						tooltip:{
-							width: 75, height:25,
+							width: 90, height:25,
 							contentStyle : { "text-align":"center"}
 						},
 						fill: false,

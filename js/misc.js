@@ -171,6 +171,9 @@ function showScreen(show) {
 
 function removeElement(delId) {
     if (!screen1.checkConstraints(delId)) {
+	    $('html').block({
+            'message': null
+        });		
         var kpi = {};
         for (var i = 0; i < kpiInfo.length; i++) {
             if (kpiInfo[i].id == delId) {
@@ -197,7 +200,7 @@ function removeElement(delId) {
                         type: 'POST',
                         data: '{"type":"DELETE","data":[{"id":' + delId + '}]}',
                         success: function(result) {
-
+							$('html').unblock();
                             if (result.succeeded) {
                                 var tree = $('#KPITree').jstree();
                                 $.notify('Kpi deleted', 'success');
