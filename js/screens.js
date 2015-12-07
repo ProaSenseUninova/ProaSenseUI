@@ -734,10 +734,10 @@ function ScreenGraph(kpiInfo) {
         var chart = $('#chart')
         if (chart.length>0) {
             chart.find('svg').attr('width', 0);
-            chart.chart();
-            chart.find('svg').attr('width', 400);
             if(chart.chart('config')!==false)
             {
+				chart.chart();
+				chart.find('svg').attr('width', 400);
 				chart.chart('config').features.legend.x = $('#chart').width() - 100;
 				chart.chart();
 				var series = $.elycharts.templates['line_basic_1'].series;

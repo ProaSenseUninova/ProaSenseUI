@@ -1,5 +1,5 @@
 var socketIOAddress = 'http://gris-groupware.uninova.pt'
-var restAddress = 'data';
+var restAddress = 'data/';
 
 //For IE
 String.prototype.endsWith = function(suffix) {
