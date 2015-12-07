@@ -159,10 +159,14 @@ window.onload = function() {
             sensors = data
         }
     });
+    $('html').block({
+			message:null
+		});
     $.ajax({
         url: restAddress + 'proasense_hella/kpi',
         type: 'GET',
         success: function(data) {
+			$('html').unblock();
             kpiInfo = data;
             screen1.kpiInfo = kpiInfo;
             screen2.kpiInfo = kpiInfo;

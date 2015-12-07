@@ -374,7 +374,7 @@ function Screen1(elInfo) {
                 kpi[context[i].value] = context[i].checked;
             }
             kpiFormula = this.getKpiFormula(kpi, kpiFormula);
-            $('#page-content-wrapper').block({
+            $('html').block({
                 'message': null
             });
             $.ajax({
@@ -393,7 +393,7 @@ function Screen1(elInfo) {
                             type: 'POST',
                             data: '{"type":"UPDATE","data":' + JSON.stringify(tmpObj) + '}',
                             success: function(result) {
-                                $('#page-content-wrapper').unblock();
+                                $('html').unblock();
 
                                 if (result.succeeded) {
                                     $.notify('KPI updated', 'success');
@@ -407,7 +407,7 @@ function Screen1(elInfo) {
                             }
                         });
                     } else {
-                        $('#page-content-wrapper').unblock();
+                        $('html').unblock();
                         $.notify('Formula update failed');
                     }
                 }
@@ -440,7 +440,7 @@ function Screen1(elInfo) {
                 newKpi.calculation_type = $('#calculationType').val();
                 newKpiFormula = this.getKpiFormula(newKpi, newKpiFormula);
 
-                $('#page-content-wrapper').block({
+                $('html').block({
                     'message': null
                 });
                 $.ajax({
@@ -458,7 +458,7 @@ function Screen1(elInfo) {
                                 type: 'POST',
                                 data: '{"type":"INSERT","data":[' + JSON.stringify(newKpiFormula) + ']}',
                                 success: function(result) {
-                                    $('#page-content-wrapper').unblock();
+                                    $('html').unblock();
                                     if (result.succeeded) {
                                         $.notify('KPI added', 'success');
                                         newKpi.children = [];
@@ -480,7 +480,7 @@ function Screen1(elInfo) {
                                 }
                             });
                         } else {
-                            $('#page-content-wrapper').unblock();
+                            $('html').unblock();
                             $.notify('Error adding kpi');
                         }
                     }
@@ -591,7 +591,7 @@ function Screen2(kpiInfo) {
                 query = query + '"' + selectBoxes.eq(j).attr('data-value') + '":' + selectBoxes.eq(j).find('option:selected').val() + ',';
             }
             query = query + '"kpi_id":' + loadedKpi + ',"upper_bound":"' + $('#upperBoundBox').val() + '","lower_bound":"' + $('#lowerBoundBox').val() + '"}]';
-            $('#page-content-wrapper').block({
+            $('html').block({
                 'message': null
             });
             $.ajax({
@@ -599,7 +599,7 @@ function Screen2(kpiInfo) {
                 type: 'POST',
                 data: '{"type":"INSERT","data":' + query + '}',
                 success: function(response) {
-                    $('#page-content-wrapper').unblock();
+                    $('html').unblock();
                     if (response.succeeded) {
                         var newTgId = response.insertId[0];
                         var newTgObj = JSON.parse(query)[0];
@@ -645,7 +645,7 @@ function Screen2(kpiInfo) {
     }
     this.delTargetInfo = function(element) {
         var id = element.dataset.id
-        $('#page-content-wrapper').block({
+        $('html').block({
             'message': null
         });
         $.ajax({
@@ -653,7 +653,7 @@ function Screen2(kpiInfo) {
             type: 'POST',
             data: '{"type":"DELETE","data":[{"id":' + id + '}]}',
             success: function(response) {
-                $('#page-content-wrapper').unblock();
+                $('html').unblock();
                 if (response.succeeded) {
                     $.notify('Target deleted', 'success');
                     element.parentElement.remove();
