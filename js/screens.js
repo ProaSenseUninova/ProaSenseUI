@@ -732,7 +732,7 @@ function ScreenGraph(kpiInfo) {
 	}
     this.adjustGraph = function() {
         var chart = $('#chart')
-        if (this.graphData!== undefined) {
+        if (chart.length>0) {
             chart.find('svg').attr('width', 0);
             chart.chart();
             chart.find('svg').attr('width', 400);
@@ -748,7 +748,8 @@ function ScreenGraph(kpiInfo) {
         }
     }
     this.adjustHeatMap = function() {
-		if(this.heatMapData!==undefined)
+		var heatMap=$('#heatMap');
+		if(heatMap.length>0)
 		{
 			this.initializeHeatMap(this.heatMapData);
 		}
