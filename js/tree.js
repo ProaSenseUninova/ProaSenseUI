@@ -1,7 +1,10 @@
 var delEditBtn = ' <span class="glyphicon glyphicon-plus" title="Add KPI" onclick="addEl();" aria-hidden="true"></span><span class="glyphicon glyphicon-pencil" title="Edit KPI" onclick="editEl();"  aria-hidden="true"></span><span class="glyphicon glyphicon-minus" title="Delete KPI" onclick="delEl();"  aria-hidden="true"></span>';
 var toClosePane = true;
-
-
+$(function(){
+	$('html').block({
+		message:null
+	});
+})
 function elementInfo() {
     this.elements = [];
     this.loadedElement = "";
@@ -163,9 +166,6 @@ window.onload = function() {
             sensors = data
         }
     });
-    $('html').block({
-			message:null
-		});
     $.ajax({
         url: restAddress + 'proasense_hella/kpi',
         type: 'GET',

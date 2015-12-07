@@ -726,7 +726,7 @@ function ScreenGraph(kpiInfo) {
 		var letters = '0123456789ABCDEF'.split('');
 		var color = '#';
 		for (var i = 0; i < 6; i++ ) {
-			color += letters[Math.floor(Math.seededRandom(1,0) * 16)];
+			color += letters[Math.floor(Math.seededRandom(16,0))];
 		}
 		return color;
 	}
