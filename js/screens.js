@@ -1,4 +1,4 @@
-function openKPI() {
+unction openKPI() {
     scrQuery.closeScreen();
     $('.headerSelector').find('a').eq(0).attr('class', 'selected');
     $('.headerSelector').find('a').eq(1).attr('class', 'notSelected');
@@ -1177,6 +1177,7 @@ function ScreenGraph(kpiInfo) {
     
     this.initializeGraph = function(graphData)
     {	
+		console.log(graphData);
 		this.graphData = graphData;
 		if(graphData.data!=null)
 		{
