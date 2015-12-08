@@ -889,7 +889,7 @@ function ScreenGraph(kpiInfo) {
             }
         }
         var graphContextualInformation = $('#graphTable').find('input:checked').val();
-        var graphStartTime = (new Date()).getTime() - 3*30*24*60*60*1000; //3 Months ago
+        var graphStartTime = (new Date()).getTime() - 1000*24*3600*365; //1 Year ago
         var graphEndTime = (new Date()).getTime() 
         var graphGranularity = $('#granularityChart').val();
         $('#graphButton').on('click', function(event) {
@@ -900,7 +900,7 @@ function ScreenGraph(kpiInfo) {
         });
         //this.initializeGraph(this.testGraphData,true);
         $.ajax({
-			url:restAddress+"func/getGraphData?kpiId="+loadedKpi+"&contextualInformation="+graphContextualInformation+"&granularity="+graphGranularity,
+			url:restAddress+"func/getGraphData?kpiId="+loadedKpi+"&contextualInformation="+graphContextualInformation+"&granularity="+graphGranularity+"&startTime="+graphStartTime+"&endTime="+graphEndTime,
 			type:"GET",
 			success:function(graphData)
 			{
