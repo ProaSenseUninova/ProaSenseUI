@@ -940,11 +940,14 @@ function ScreenGraph(kpiInfo) {
 				scr.oee(realTimeKpisData.oee);
 			},
 		});
-        var firstDate = new Date();
-        firstDate.setHours(0);
-        firstDate.setMinutes(0);
-        firstDate.setSeconds(0);
-        firstDate.setMilliseconds(0);
+
+        var secondDate = new Date();
+        secondDate.setHours(0);
+        secondDate.setMinutes(0);
+        secondDate.setSeconds(0);
+        secondDate.setMilliseconds(0);
+        
+        var firstDate = new Date(secondDate -1000*24*3600*365);
         $('#fromDateChart').appendDtpicker({
                 "dateOnly": true,
                 "onShow": function(handler) {},
@@ -957,7 +960,7 @@ function ScreenGraph(kpiInfo) {
                 "onShow": function(handler) {},
                 "onHide": function(handler) {}
             },
-            firstDate);
+            secondDate);
         $('#fromDateHeatMap').appendDtpicker({
                 "dateOnly": true,
                 "onShow": function(handler) {},
@@ -970,7 +973,7 @@ function ScreenGraph(kpiInfo) {
                 "onShow": function(handler) {},
                 "onHide": function(handler) {}
             },
-            firstDate);
+            secondDate);
         showScreen(true);
 
         this.connect();
