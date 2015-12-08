@@ -1,7 +1,7 @@
 <table class="headerTable">
 	<tr>
 		<td colspan=3>
-			<div class="pageHeader"><b>Real time KPIs</i></div>
+			<div class="pageHeader"><b>Real time KPIs</b></div>
 		</td>
 	</tr>
 	<tr>
@@ -12,11 +12,10 @@
 		<td width=33% align="center" style="vertical-align: middle">
 			<div id="gauge" style="width: 150px; height: 120px;"></div>
 		</td>
-		<td style="vertical-align: middle;" >
+		<td style="vertical-align: middle;">
 			<div class="pageHeader">OEE</div>
 			<div class="progress" style="width:60%;margin:auto">
-				<div class="progress-bar" role="progressbar" aria-valuenow="0"
-					aria-valuemin="0" aria-valuemax="100" style="width:0%">
+				<div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
 					0%
 				</div>
 			</div>
@@ -27,28 +26,23 @@
 	<tr>
 		<form id="chartSelector" action="">
 			<td data-cInfo="context_global">
-				<input type="radio" checked name="type" value="Global">
-				Global
+				<input type="radio" checked name="type" value="Global"> Global
 				<br>
 			</td>
 			<td data-cInfo="context_product">
-				<input type="radio" name="type" value="Product">
-				Product
+				<input type="radio" name="type" value="Product"> Product
 				<br>
 			</td>
-			<td  data-cInfo="context_machine">
-				<input type="radio" name="type" value="Machine">
-				Machine
+			<td data-cInfo="context_machine">
+				<input type="radio" name="type" value="Machine"> Machine
 				<br>
 			</td>
-			<td data-cInfo="context_shift" >
-				<input type="radio" name="type" value="Shift">
-				Shift
+			<td data-cInfo="context_shift">
+				<input type="radio" name="type" value="Shift"> Shift
 				<br>
 			</td>
-			<td  data-cInfo="context_mould">
-				<input type="radio" name="type" value="Mould">
-				Mould
+			<td data-cInfo="context_mould">
+				<input type="radio" name="type" value="Mould"> Mould
 				<br>
 			</td>
 		</form>
@@ -56,21 +50,22 @@
 	<tr>
 		<td id="graphCell" align="center" rowspan=2 colspan=5>
 			<div id="chartTitle"></div>
-			<div id="chart" ></div>
+			<div id="chart"></div>
 		</td>
 		<td style="border:0px solid black;vertical-align:top;width:150px">
 			<b>period covered:</b>
-			<br><br>
-			From:
+			<br>
+			<br> From:
 			<br>
 			<input type="text" class="inputField" id="fromDateChart" value="">
-			<br>
-			To:
+			<br> To:
 			<br>
 			<input type="text" class="inputField" id="toDateChart" value="">
-			<br><br>
+			<br>
+			<br>
 			<b>Granulatiry:</b>
-			<br><br>
+			<br>
+			<br>
 			<select id="granularityChart" class="box">
 				<option value="hourly">Hourly</option>
 				<option value="daily">Daily</option>
@@ -82,34 +77,30 @@
 	<tr>
 		<td>
 			<div align="right" class="btn-group screen;" role="group" aria-label="...">
-				<button type="button" id="graphButton"  class="btn btn-default">Update</button>
+				<button type="button" id="graphButton" class="btn btn-default">Update</button>
 			</div>
 		</td>
 	</tr>
 </table>
 <br>
 <div align="left">Contextual Information</div>
-<table id="heatMapTable" class="containerColor chartTable"  width="100%">
+<table id="heatMapTable" class="containerColor chartTable" width="100%">
 	<tr>
 		<form id="heatMapSelector" action="">
-			<td  data-cInfo="context_product">
-				<input value="product" type="CheckBox">
-				Product
+			<td data-cInfo="context_product">
+				<input value="product" type="CheckBox"> Product
 				<br>
 			</td>
 			<td data-cInfo="context_machine">
-				<input value="machine" type="CheckBox">
-				Machine
+				<input value="machine" type="CheckBox"> Machine
 				<br>
 			</td>
 			<td data-cInfo="context_shift">
-				<input value="shift" type="CheckBox">
-				Shift
+				<input value="shift" type="CheckBox"> Shift
 				<br>
 			</td>
 			<td data-cInfo="context_mould">
-				<input value="mould" type="CheckBox">
-				Mould
+				<input value="mould" type="CheckBox"> Mould
 				<br>
 			</td>
 		</form>
@@ -121,17 +112,18 @@
 		</td>
 		<td style="border:0px solid black;vertical-align:top;width:150px">
 			<b>period covered:</b>
-			<br><br>
-			From:
+			<br>
+			<br> From:
 			<br>
 			<input type="text" class="inputField" id="fromDateHeatMap" value="">
-			<br>
-			To:
+			<br> To:
 			<br>
 			<input type="text" class="inputField" id="toDateHeatMap" value="">
-			<br><br>
+			<br>
+			<br>
 			<b>Granulatiry:</b>
-			<br><br>
+			<br>
+			<br>
 			<select id="granularityHeatMap" class="box">
 				<option value="hourly">Hourly</option>
 				<option value="daily">Daily</option>
@@ -148,4 +140,3 @@
 		</td>
 	</tr>
 </table>
-

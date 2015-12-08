@@ -1,750 +1,739 @@
 function openKPI() {
-    scrQuery.closeScreen();
-    $('.headerSelector').find('a').eq(0).attr('class', 'selected');
-    $('.headerSelector').find('a').eq(1).attr('class', 'notSelected');
-    $('.headerSelector').find('a').eq(2).attr('class', 'notSelected');
-    var isScrHidden = $('.screen').css('visibility') == "hidden";
-    activeScreen = screen1;
-    if(!isScrHidden)
-    {
+	scrQuery.closeScreen();
+	$('.headerSelector').find('a').eq(0).attr('class', 'selected');
+	$('.headerSelector').find('a').eq(1).attr('class', 'notSelected');
+	$('.headerSelector').find('a').eq(2).attr('class', 'notSelected');
+	var isScrHidden = $('.screen').css('visibility') == "hidden";
+	activeScreen = screen1;
+	if (!isScrHidden) {
 		activeScreen.openScreen();
-    }
+	}
 }
 
 function openTarget() {
-    scrQuery.closeScreen();
-    $('.headerSelector').find('a').eq(0).attr('class', 'notSelected');
-    $('.headerSelector').find('a').eq(1).attr('class', 'selected');
-    $('.headerSelector').find('a').eq(2).attr('class', 'notSelected');
-    var isScrHidden = $('.screen').css('visibility') == "hidden";
-    activeScreen = screen2;
-    //if(!isScrHidden)
-    //{
-    activeScreen.openScreen();
-    //}
+	scrQuery.closeScreen();
+	$('.headerSelector').find('a').eq(0).attr('class', 'notSelected');
+	$('.headerSelector').find('a').eq(1).attr('class', 'selected');
+	$('.headerSelector').find('a').eq(2).attr('class', 'notSelected');
+	var isScrHidden = $('.screen').css('visibility') == "hidden";
+	activeScreen = screen2;
+	//if(!isScrHidden)
+	//{
+	activeScreen.openScreen();
+	//}
 }
 
 function openQuery() {
-    $('.headerSelector').find('a').eq(0).attr('class', 'notSelected');
-    $('.headerSelector').find('a').eq(1).attr('class', 'notSelected');
-    $('.headerSelector').find('a').eq(2).attr('class', 'selected');
-    scrQuery.openScreen();
+	$('.headerSelector').find('a').eq(0).attr('class', 'notSelected');
+	$('.headerSelector').find('a').eq(1).attr('class', 'notSelected');
+	$('.headerSelector').find('a').eq(2).attr('class', 'selected');
+	scrQuery.openScreen();
 
 }
 
 
 function Screen1(elInfo) {
-    this.elInfo = elInfo
+	this.elInfo = elInfo
 
-    var scr = this;
+	var scr = this;
 
-    $.get("inc/screen1.inc", function(content) {
-        scr.content = content;
-    });
+	$.get("inc/screen1.inc", function(content) {
+		scr.content = content;
+	});
 
-    this.saveBtn = function() {
-        this.saveLoadedElement();
-    }
-
-
-    this.cancelBtn = function() {
-        this.closeScreen();
-    }
-
-    this.selectBoxes = function(e) {
-        $('.elRow').css('display', 'none');
-        $('.elAggRow').css('display', 'none');
-        if ($('#calculationType').val() == 'aggregate' && $('#kpiSensor1').val() != null) {
-            $('.elAggRow').css('display', 'table-row');
-        } else if ($('#calculationType').val() == 'composed' && ($('#kpiSensor2').val() != null || $('#kpiSensor3').val() != null || $('#kpiSensor4').val() != null)) {
-            $('.elRow').css('display', 'table-row');
-        }
-        $('.kpi').css('display', 'none');
-        $('.simple').css('display', 'none');
-        $('.aggregate').css('display', 'none');
-        $('.composed').css('display', 'none')
-        $('.' + e.currentTarget.value).css('display', 'table-row');
-    }
-    this.kpiSensor1 = function() {
-        $('.elAggRow').css('display', 'table-row');
-        if ($('#kpiSensor1').val() == 'sensor') {
-            $('#selectSensor2').css('display', 'inline-block');
-            $('#selectKpi1').css('display', 'none');
-        } else {
-            $('#selectSensor2').css('display', 'none');
-            $('#selectKpi1').css('display', 'inline-block');
-        }
-    }
-    this.kpiSensor = function() {
-        $('.elRow').css('display', 'table-row');
-        var kpiSensors = $('.kpiSensor');
-        for (var i = 0; i < kpiSensors.length; i++) {
-            if (kpiSensors.eq(i).val() == 'sensor') {
-                $('.sensorChoice').eq(i).css('display', 'inline-block');
-                $('.kpiChoice').eq(i).css('display', 'none');
-            } else if (kpiSensors.eq(i).val() == 'kpi') {
-                $('.kpiChoice').eq(i).css('display', 'inline-block');
-                $('.sensorChoice').eq(i).css('display', 'none');
-            }
-        }
-    }
-    this.loadSensors = function() {
-        var tmpVal = [];
-        for (var i = 0; i < $('.sensorBox').length; i++) {
-            tmpVal.push($('.sensorBox').eq(i).val());
-        }
-        $('.sensorBox').find('option:gt(0)').remove();
-        for (var i = 0; i < sensors.length; i++) {
-            $('.sensorBox').append('<option value=' + sensors[i].id + '>' + sensors[i].name + '</option>');
-        }
-        for (var i = 0; i < $('.sensorBox').length; i++) {
-            $('.sensorBox').eq(i).val(tmpVal[i]);
-        }
-    }
-    this.loadKpis = function() {
-        var tmpVal = [];
-        for (var i = 0; i < $('.kpiBox').length; i++) {
-            tmpVal.push($('.kpiBox').eq(i).val());
-        }
-        $('.kpiBox').find('option:gt(0)').remove();
-        for (var i = 0; i < this.kpiInfo.length; i++) {
-            $('.kpiBox').append('<option value=' + this.kpiInfo[i].id + '>' + this.kpiInfo[i].name + '</option>');
-        }
-        for (var i = 0; i < $('.kpiBox').length; i++) {
-            $('.kpiBox').eq(i).val(tmpVal[i]);
-        }
-    }
-
-    this.checkConstraints = function(id) {
-        for (var i = 0; i < kpiFormulas.length; i++) {
-            if (kpiFormulas[i].kpi_id == id) {
-                continue;
-            }
-            if (kpiFormulas[i].term1_kpi_id == id || kpiFormulas[i].term2_kpi_id == id || kpiFormulas[i].term3_kpi_id == id) {
-                return true
-            }
-        }
-        return false;
-    }
+	this.saveBtn = function() {
+		this.saveLoadedElement();
+	}
 
 
-    this.openScreen = function() {
+	this.cancelBtn = function() {
+		this.closeScreen();
+	}
 
-        $('.content').html(this.content);
-        showScreen(true);
-        $('#cancelBtn').on('click', function(event) {
-            scr.cancelBtn();
-        });
-        $('#saveBtn').on('click', function(event) {
-            scr.saveBtn();
-        });
-        $('#calculationType').change(this.selectBoxes);
-        $('.kpiSensor').change(this.kpiSensor);
-        $('#kpiSensor1').change(this.kpiSensor1);
-        $('#op2').change(this.thirdElement);
-        this.loadSensors();
-        this.loadKpis();
+	this.selectBoxes = function(e) {
+		$('.elRow').css('display', 'none');
+		$('.elAggRow').css('display', 'none');
+		if ($('#calculationType').val() == 'aggregate' && $('#kpiSensor1').val() != null) {
+			$('.elAggRow').css('display', 'table-row');
+		} else if ($('#calculationType').val() == 'composed' && ($('#kpiSensor2').val() != null || $('#kpiSensor3').val() != null || $('#kpiSensor4').val() != null)) {
+			$('.elRow').css('display', 'table-row');
+		}
+		$('.kpi').css('display', 'none');
+		$('.simple').css('display', 'none');
+		$('.aggregate').css('display', 'none');
+		$('.composed').css('display', 'none')
+		$('.' + e.currentTarget.value).css('display', 'table-row');
+	}
+	this.kpiSensor1 = function() {
+		$('.elAggRow').css('display', 'table-row');
+		if ($('#kpiSensor1').val() == 'sensor') {
+			$('#selectSensor2').css('display', 'inline-block');
+			$('#selectKpi1').css('display', 'none');
+		} else {
+			$('#selectSensor2').css('display', 'none');
+			$('#selectKpi1').css('display', 'inline-block');
+		}
+	}
+	this.kpiSensor = function() {
+		$('.elRow').css('display', 'table-row');
+		var kpiSensors = $('.kpiSensor');
+		for (var i = 0; i < kpiSensors.length; i++) {
+			if (kpiSensors.eq(i).val() == 'sensor') {
+				$('.sensorChoice').eq(i).css('display', 'inline-block');
+				$('.kpiChoice').eq(i).css('display', 'none');
+			} else if (kpiSensors.eq(i).val() == 'kpi') {
+				$('.kpiChoice').eq(i).css('display', 'inline-block');
+				$('.sensorChoice').eq(i).css('display', 'none');
+			}
+		}
+	}
+	this.loadSensors = function() {
+		var tmpVal = [];
+		for (var i = 0; i < $('.sensorBox').length; i++) {
+			tmpVal.push($('.sensorBox').eq(i).val());
+		}
+		$('.sensorBox').find('option:gt(0)').remove();
+		for (var i = 0; i < sensors.length; i++) {
+			$('.sensorBox').append('<option value=' + sensors[i].id + '>' + sensors[i].name + '</option>');
+		}
+		for (var i = 0; i < $('.sensorBox').length; i++) {
+			$('.sensorBox').eq(i).val(tmpVal[i]);
+		}
+	}
+	this.loadKpis = function() {
+		var tmpVal = [];
+		for (var i = 0; i < $('.kpiBox').length; i++) {
+			tmpVal.push($('.kpiBox').eq(i).val());
+		}
+		$('.kpiBox').find('option:gt(0)').remove();
+		for (var i = 0; i < this.kpiInfo.length; i++) {
+			$('.kpiBox').append('<option value=' + this.kpiInfo[i].id + '>' + this.kpiInfo[i].name + '</option>');
+		}
+		for (var i = 0; i < $('.kpiBox').length; i++) {
+			$('.kpiBox').eq(i).val(tmpVal[i]);
+		}
+	}
 
-        $('.box').change(function(e) {
-            $(e.currentTarget).css('color', 'black');
-        });
-        if (loadedKpi != "") {
-            this.loadElData(loadedKpi)
-        } else {}
-    }
-    this.thirdElement = function() {
-        var els = $('.thEl');
-        if ($('#op2').val() == 'none') {
-            els.attr('disabled', true);
-            els.css('color', '#808080');
-        } else {
-
-            els.attr('disabled', false);
-            for (var i = 0; i < els.length; i++) {
-                if (els.eq(i).val() != null) {
-                    els.eq(i).css('color', 'black');
-                }
-            }
-        }
-    }
-
-    this.closeScreen = function() {
-        this.changeLoadedKpi();
-        showScreen(false);
-        $('.content').html('');
-    }
-
-    this.updateField = function(id, value) {
-        $('#' + id).val(value);
-        if (value !== null) {
-            $('#' + id).css('color', 'black');
-        }
-    }
-
-    this.loadElData = function(elId) {
-        for (var i = 0; i < this.kpiInfo.length; i++) {
-            if (this.kpiInfo[i].id == elId) {
-                this.changeLoadedKpi(elId);
-                el = this.kpiInfo[i];
-                this.updateField('name', el.name);
-                this.updateField('description', el.description);
-
-                this.updateField('calculationType', el.calculation_type);
-                var kpiFormula = {};
-                for (var j = 0; j < kpiFormulas.length; j++) {
-                    if (kpiFormulas[j].kpi_id == loadedKpi) {
-                        kpiFormula = kpiFormulas[j];
-                        break;
-                    }
-                }
-                if (el.calculation_type == 'simple') {
-                    this.updateField('selectSensor1', kpiFormula.term1_sensor_id);
-                } else if (el.calculation_type == 'aggregate') {
-                    var isKpi = kpiFormula.term1_kpi_id != null;
-                    $('#kpiSensor1').val(isKpi ? 'kpi' : 'sensor');
-                    $('#kpiSensor1').css('color', 'black');
-                    $('#selectAggType').val(kpiFormula.operator_1);
-                    $('#selectAggType').css('color', 'black');
-                    if (isKpi) {
-                        $('#selectKpi1').val(kpiFormula.term1_kpi_id);
-                        $('#selectKpi1').css('color', 'black');
-                    } else {
-                        $('#selectSensor2').val(kpiFormula.term1_sensor_id);
-                        $('#selectSensor2').css('color', 'black');
-                    }
-                    this.kpiSensor1();
-                } else if (el.calculation_type == 'composed') {
-                    var isKpi = [];
-                    isKpi[0] = kpiFormula.term1_kpi_id != null;
-                    isKpi[1] = kpiFormula.term2_kpi_id != null;
-                    isKpi[2] = kpiFormula.term3_kpi_id != null;
-                    $('#op1').val(kpiFormula.operator_1);
-                    $('#op1').css('color', 'black');
-                    $('#op2').val(kpiFormula.operator_2 == null ? 'none' : kpiFormula.operator_2);
-                    $('#op2').css('color', kpiFormula.operator_2 == null ? '#808080' : 'black');
-                    $('#kpiSensor2').val(isKpi[0] ? 'kpi' : 'sensor');
-                    $('#kpiSensor2').css('color', 'black');
-                    $('#kpiSensor3').val(isKpi[1] ? 'kpi' : 'sensor');
-                    $('#kpiSensor3').css('color', 'black');
-                    $('#kpiSensor4').val(isKpi[2] ? 'kpi' : 'sensor');
-                    $('#kpiSensor4').css('color', 'black');
-                    if (kpiFormula.operator_2 == null) {
-                        $('#kpiSensor4').val(null);
-                        $('#kpiSensor4').eq(i).css('color', '#808080');
-                    }
-                    for (var i = 0; i < isKpi.length; i++) {
-                        var val = "";
-                        if (isKpi[i]) {
-                            val = kpiFormula['term' + (i + 1) + '_kpi_id'];
-                            $('.kpiChoice').eq(i).val(val);
-                            $('.kpiChoice').eq(i).css('color', val == null ? '#808080' : 'black');
-                        } else {
-                            val = kpiFormula['term' + (i + 1) + '_sensor_id'];
-                            $('.sensorChoice').eq(i).val(kpiFormula['term' + (i + 1) + '_sensor_id']);
-                            $('.sensorChoice').eq(i).css('color', val == null ? '#808080' : 'black');
-                        }
-                    }
-                    this.thirdElement();
-                    this.kpiSensor();
+	this.checkConstraints = function(id) {
+		for (var i = 0; i < kpiFormulas.length; i++) {
+			if (kpiFormulas[i].kpi_id == id) {
+				continue;
+			}
+			if (kpiFormulas[i].term1_kpi_id == id || kpiFormulas[i].term2_kpi_id == id || kpiFormulas[i].term3_kpi_id == id) {
+				return true
+			}
+		}
+		return false;
+	}
 
 
-                }
+	this.openScreen = function() {
+
+		$('.content').html(this.content);
+		showScreen(true);
+		$('#cancelBtn').on('click', function(event) {
+			scr.cancelBtn();
+		});
+		$('#saveBtn').on('click', function(event) {
+			scr.saveBtn();
+		});
+		$('#calculationType').change(this.selectBoxes);
+		$('.kpiSensor').change(this.kpiSensor);
+		$('#kpiSensor1').change(this.kpiSensor1);
+		$('#op2').change(this.thirdElement);
+		this.loadSensors();
+		this.loadKpis();
+
+		$('.box').change(function(e) {
+			$(e.currentTarget).css('color', 'black');
+		});
+		if (loadedKpi != "") {
+			this.loadElData(loadedKpi)
+		} else {}
+	}
+	this.thirdElement = function() {
+		var els = $('.thEl');
+		if ($('#op2').val() == 'none') {
+			els.attr('disabled', true);
+			els.css('color', '#808080');
+		} else {
+
+			els.attr('disabled', false);
+			for (var i = 0; i < els.length; i++) {
+				if (els.eq(i).val() != null) {
+					els.eq(i).css('color', 'black');
+				}
+			}
+		}
+	}
+
+	this.closeScreen = function() {
+		this.changeLoadedKpi();
+		showScreen(false);
+		$('.content').html('');
+	}
+
+	this.updateField = function(id, value) {
+		$('#' + id).val(value);
+		if (value !== null) {
+			$('#' + id).css('color', 'black');
+		}
+	}
+
+	this.loadElData = function(elId) {
+		for (var i = 0; i < this.kpiInfo.length; i++) {
+			if (this.kpiInfo[i].id == elId) {
+				this.changeLoadedKpi(elId);
+				el = this.kpiInfo[i];
+				this.updateField('name', el.name);
+				this.updateField('description', el.description);
+
+				this.updateField('calculationType', el.calculation_type);
+				var kpiFormula = {};
+				for (var j = 0; j < kpiFormulas.length; j++) {
+					if (kpiFormulas[j].kpi_id == loadedKpi) {
+						kpiFormula = kpiFormulas[j];
+						break;
+					}
+				}
+				if (el.calculation_type == 'simple') {
+					this.updateField('selectSensor1', kpiFormula.term1_sensor_id);
+				} else if (el.calculation_type == 'aggregate') {
+					var isKpi = kpiFormula.term1_kpi_id != null;
+					$('#kpiSensor1').val(isKpi ? 'kpi' : 'sensor');
+					$('#kpiSensor1').css('color', 'black');
+					$('#selectAggType').val(kpiFormula.operator_1);
+					$('#selectAggType').css('color', 'black');
+					if (isKpi) {
+						$('#selectKpi1').val(kpiFormula.term1_kpi_id);
+						$('#selectKpi1').css('color', 'black');
+					} else {
+						$('#selectSensor2').val(kpiFormula.term1_sensor_id);
+						$('#selectSensor2').css('color', 'black');
+					}
+					this.kpiSensor1();
+				} else if (el.calculation_type == 'composed') {
+					var isKpi = [];
+					isKpi[0] = kpiFormula.term1_kpi_id != null;
+					isKpi[1] = kpiFormula.term2_kpi_id != null;
+					isKpi[2] = kpiFormula.term3_kpi_id != null;
+					$('#op1').val(kpiFormula.operator_1);
+					$('#op1').css('color', 'black');
+					$('#op2').val(kpiFormula.operator_2 == null ? 'none' : kpiFormula.operator_2);
+					$('#op2').css('color', kpiFormula.operator_2 == null ? '#808080' : 'black');
+					$('#kpiSensor2').val(isKpi[0] ? 'kpi' : 'sensor');
+					$('#kpiSensor2').css('color', 'black');
+					$('#kpiSensor3').val(isKpi[1] ? 'kpi' : 'sensor');
+					$('#kpiSensor3').css('color', 'black');
+					$('#kpiSensor4').val(isKpi[2] ? 'kpi' : 'sensor');
+					$('#kpiSensor4').css('color', 'black');
+					if (kpiFormula.operator_2 == null) {
+						$('#kpiSensor4').val(null);
+						$('#kpiSensor4').eq(i).css('color', '#808080');
+					}
+					for (var i = 0; i < isKpi.length; i++) {
+						var val = "";
+						if (isKpi[i]) {
+							val = kpiFormula['term' + (i + 1) + '_kpi_id'];
+							$('.kpiChoice').eq(i).val(val);
+							$('.kpiChoice').eq(i).css('color', val == null ? '#808080' : 'black');
+						} else {
+							val = kpiFormula['term' + (i + 1) + '_sensor_id'];
+							$('.sensorChoice').eq(i).val(kpiFormula['term' + (i + 1) + '_sensor_id']);
+							$('.sensorChoice').eq(i).css('color', val == null ? '#808080' : 'black');
+						}
+					}
+					this.thirdElement();
+					this.kpiSensor();
 
 
-                this.updateField('samplingRate', el.sampling_rate);
-                this.updateField('samplingInterval', el.sampling_interval);
-
-                $('.kpi').css('display', 'none');
-                $('.simple').css('display', 'none');
-                $('.aggregate').css('display', 'none');
-                $('.composed').css('display', 'none')
-                $('.' + el.calculation_type).css('display', 'table-row');
-
-                var chk = $('#contextualInformation input');
-                chk[0].checked = el.context_product;
-                chk[1].checked = el.context_machine;
-                chk[2].checked = el.context_shift;
-                chk[3].checked = el.context_mould;
+				}
 
 
-                $('.' + el.calculationType).css('display', 'table-row');
-                return true;
-            }
-        }
-        return false;
-    }
-    this.changeLoadedKpi = function(elId) /***/ {
-        var oldId = loadedKpi;
-        loadedKpi = arguments.length > 0 ? elId : "";
+				this.updateField('samplingRate', el.sampling_rate);
+				this.updateField('samplingInterval', el.sampling_interval);
 
-        var tree = $("#KPITree").jstree(true);
-        var toDelete = true;
-        for (var i = 0; i < this.kpiInfo.length; i++) {
-            if (oldId == this.kpiInfo[i].id) {
-                toDelete = false;
-                break;
-            }
-        }
-        if (toDelete) {
-            tree.delete_node(oldId);
-            if (arguments.length > 0) {
-                if (!tree.get_text(elId).endsWith('</span>')) {
-                    tree.edit(elId);
-                }
-            }
-        }
-    }
-    this.getKpiFormula = function(kpi, kpiFormula) {
-        if (kpi.calculation_type == 'simple') {
-            kpiFormula.term1_sensor_id = parseInt($('#selectSensor1').val());
-        } else if (kpi.calculation_type == 'aggregate') {
-            if ($('#kpiSensor1').val() == 'kpi') {
-                kpiFormula.term1_kpi_id = parseInt($('#selectKpi1').val());
-            } else {
-                kpiFormula.term1_sensor_id = parseInt($('#selectSensor2').val());
-            }
-            kpiFormula.operator_1 = $('#selectAggType').val();
+				$('.kpi').css('display', 'none');
+				$('.simple').css('display', 'none');
+				$('.aggregate').css('display', 'none');
+				$('.composed').css('display', 'none')
+				$('.' + el.calculation_type).css('display', 'table-row');
 
-        } else if (kpi.calculation_type == 'composed') {
-            if ($('#kpiSensor2').val() == 'kpi') {
-                kpiFormula.term1_kpi_id = parseInt($('#selectKpi2').val());
-            } else {
-                kpiFormula.term1_sensor_id = parseInt($('#selectSensor3').val());
-            }
-            if ($('#kpiSensor3').val() == 'kpi') {
-                kpiFormula.term2_kpi_id = parseInt($('#selectKpi3').val());
-            } else {
-                kpiFormula.term2_sensor_id = parseInt($('#selectSensor4').val());
-            }
-            kpiFormula.operator_1 = $('#op1').val();
-            if ($('#op2').val() != 'none') {
-                kpiFormula.operator_2 = $('#op2').val();
-                if ($('#kpiSensor4').val() == 'kpi') {
-                    kpiFormula.term3_kpi_id = parseInt($('#selectKpi4').val());
-                } else {
-                    kpiFormula.term3_sensor_id = parseInt($('#selectSensor5').val());
-                }
-            }
-        }
-        return kpiFormula;
-    }
-    this.saveLoadedElement = function() {
-        var kpi = {};
-        var kpiFormula = {};
-        var kpiIndex = "";
-        var kpiFormulaIndex = "";
-        var kpiFormulaId = "";
-        if (loadedKpi != "") {
+				var chk = $('#contextualInformation input');
+				chk[0].checked = el.context_product;
+				chk[1].checked = el.context_machine;
+				chk[2].checked = el.context_shift;
+				chk[3].checked = el.context_mould;
 
-            for (var i = 0; i < kpiInfo.length; i++) {
-                if (kpiInfo[i].id == loadedKpi) {
-                    kpi = jQuery.extend({}, kpiInfo[i]);
-                    kpiIndex = i;
-                    break;
-                }
-            }
-            for (var i = 0; i < kpiFormulas.length; i++) {
-                if (kpiFormulas[i].kpi_id == loadedKpi) {
-                    kpiFormulaId = kpiFormulas[i].id;
-                    kpiFormulaIndex = i;
-                    break;
-                }
-            }
 
-            kpiFormula.id = kpiFormulaId;
-            kpiFormula.kpi_id = parseInt(loadedKpi);
-            kpiFormula.term1_kpi_id = null;
-            kpiFormula.term1_sensor_id = null;
-            kpiFormula.operator_1 = null;
-            kpiFormula.term2_kpi_id = null;
-            kpiFormula.term2_sensor_id = null;
-            kpiFormula.operator_2 = null;
-            kpiFormula.term3_kpi_id = null;
-            kpiFormula.term3_sensor_id = null;
-            kpiFormula.criteria = null;
+				$('.' + el.calculationType).css('display', 'table-row');
+				return true;
+			}
+		}
+		return false;
+	}
+	this.changeLoadedKpi = function(elId) /***/ {
+		var oldId = loadedKpi;
+		loadedKpi = arguments.length > 0 ? elId : "";
 
-            kpi.name = $('#name').val();
-            kpi.text = $('#name').val() + delEditBtn;
-            kpi.description = $('#description').val();
-            kpi.calculation_type = $('#calculationType').val();
-            kpi.sampling_rate = parseInt($('#samplingRate').val());
-            kpi.sampling_interval = $('#samplingInterval').val();
-            var context = $('#contextualInformation :input');
-            for (var i = 0; i < context.length; i++) {
-                kpi[context[i].value] = context[i].checked;
-            }
-            kpiFormula = this.getKpiFormula(kpi, kpiFormula);
-            $('html').block({
-                'message': null
-            });
-            $.ajax({
-                url: restAddress + 'proasense_hella/kpi_formula',
-                type: 'POST',
-                data: '{"type":"UPDATE","data":' + JSON.stringify(kpiFormula) + '}',
-                success: function(result) {
+		var tree = $("#KPITree").jstree(true);
+		var toDelete = true;
+		for (var i = 0; i < this.kpiInfo.length; i++) {
+			if (oldId == this.kpiInfo[i].id) {
+				toDelete = false;
+				break;
+			}
+		}
+		if (toDelete) {
+			tree.delete_node(oldId);
+			if (arguments.length > 0) {
+				if (!tree.get_text(elId).endsWith('</span>')) {
+					tree.edit(elId);
+				}
+			}
+		}
+	}
+	this.getKpiFormula = function(kpi, kpiFormula) {
+		if (kpi.calculation_type == 'simple') {
+			kpiFormula.term1_sensor_id = parseInt($('#selectSensor1').val());
+		} else if (kpi.calculation_type == 'aggregate') {
+			if ($('#kpiSensor1').val() == 'kpi') {
+				kpiFormula.term1_kpi_id = parseInt($('#selectKpi1').val());
+			} else {
+				kpiFormula.term1_sensor_id = parseInt($('#selectSensor2').val());
+			}
+			kpiFormula.operator_1 = $('#selectAggType').val();
 
-                    if (result.succeeded) {
-                        var tmpObj = jQuery.extend({}, kpi);
-                        delete tmpObj.parent_id;
-                        delete tmpObj.text;
-                        delete tmpObj.children;
-                        $.ajax({
-                            url: restAddress + 'proasense_hella/kpi',
-                            type: 'POST',
-                            data: '{"type":"UPDATE","data":' + JSON.stringify(tmpObj) + '}',
-                            success: function(result) {
-                                $('html').unblock();
+		} else if (kpi.calculation_type == 'composed') {
+			if ($('#kpiSensor2').val() == 'kpi') {
+				kpiFormula.term1_kpi_id = parseInt($('#selectKpi2').val());
+			} else {
+				kpiFormula.term1_sensor_id = parseInt($('#selectSensor3').val());
+			}
+			if ($('#kpiSensor3').val() == 'kpi') {
+				kpiFormula.term2_kpi_id = parseInt($('#selectKpi3').val());
+			} else {
+				kpiFormula.term2_sensor_id = parseInt($('#selectSensor4').val());
+			}
+			kpiFormula.operator_1 = $('#op1').val();
+			if ($('#op2').val() != 'none') {
+				kpiFormula.operator_2 = $('#op2').val();
+				if ($('#kpiSensor4').val() == 'kpi') {
+					kpiFormula.term3_kpi_id = parseInt($('#selectKpi4').val());
+				} else {
+					kpiFormula.term3_sensor_id = parseInt($('#selectSensor5').val());
+				}
+			}
+		}
+		return kpiFormula;
+	}
+	this.saveLoadedElement = function() {
+		var kpi = {};
+		var kpiFormula = {};
+		var kpiIndex = "";
+		var kpiFormulaIndex = "";
+		var kpiFormulaId = "";
+		if (loadedKpi != "") {
 
-                                if (result.succeeded) {
-                                    $.notify('KPI updated', 'success');
-                                    kpiInfo[kpiIndex] = kpi;
-                                    kpiFormulas[kpiFormulaIndex] = kpiFormula;
-                                    $('#KPITree').jstree().rename_node(kpi.id, kpi.text);
-                                    activeScreen.closeScreen();
-                                } else {
-                                    $.notify('KPI update failed');
-                                }
-                            }
-                        });
-                    } else {
-                        $('html').unblock();
-                        $.notify('Formula update failed');
-                    }
-                }
-            });
+			for (var i = 0; i < kpiInfo.length; i++) {
+				if (kpiInfo[i].id == loadedKpi) {
+					kpi = jQuery.extend({}, kpiInfo[i]);
+					kpiIndex = i;
+					break;
+				}
+			}
+			for (var i = 0; i < kpiFormulas.length; i++) {
+				if (kpiFormulas[i].kpi_id == loadedKpi) {
+					kpiFormulaId = kpiFormulas[i].id;
+					kpiFormulaIndex = i;
+					break;
+				}
+			}
 
-        } else {
-            if ($('#calculationType').val() != null && $('#samplingInterval').val() != null && $('#name').val() != "" && $('#description').val() != "") {
-                var newKpi = {};
-                var newKpiFormula = {};
-                newKpiFormula.term1_sensor_id = null;
-                newKpiFormula.operator_1 = null;
-                newKpiFormula.term2_kpi_id = null;
-                newKpiFormula.term2_sensor_id = null;
-                newKpiFormula.operator_2 = null;
-                newKpiFormula.term3_kpi_id = null;
-                newKpiFormula.term3_sensor_id = null;
-                newKpiFormula.criteria = null;
+			kpiFormula.id = kpiFormulaId;
+			kpiFormula.kpi_id = parseInt(loadedKpi);
+			kpiFormula.term1_kpi_id = null;
+			kpiFormula.term1_sensor_id = null;
+			kpiFormula.operator_1 = null;
+			kpiFormula.term2_kpi_id = null;
+			kpiFormula.term2_sensor_id = null;
+			kpiFormula.operator_2 = null;
+			kpiFormula.term3_kpi_id = null;
+			kpiFormula.term3_sensor_id = null;
+			kpiFormula.criteria = null;
 
-                newKpi.parent_id = newParentId;
-                newKpi.name = $('#name').val();
-                newKpi.description = $('#description').val();
-                var samplingRate = parseInt($('#samplingRate').val());
-                newKpi.sampling_rate = isNaN(samplingRate) ? 0 : samplingRate;
-                newKpi.sampling_interval = $('#samplingInterval').val();
-                var chk = $('#contextualInformation input');
-                newKpi.context_product = chk[0].checked;
-                newKpi.context_machine = chk[1].checked;
-                newKpi.context_shift = chk[2].checked;
-                newKpi.context_mould = chk[3].checked;
-                newKpi.calculation_type = $('#calculationType').val();
-                newKpiFormula = this.getKpiFormula(newKpi, newKpiFormula);
+			kpi.name = $('#name').val();
+			kpi.text = $('#name').val() + delEditBtn;
+			kpi.description = $('#description').val();
+			kpi.calculation_type = $('#calculationType').val();
+			kpi.sampling_rate = parseInt($('#samplingRate').val());
+			kpi.sampling_interval = $('#samplingInterval').val();
+			var context = $('#contextualInformation :input');
+			for (var i = 0; i < context.length; i++) {
+				kpi[context[i].value] = context[i].checked;
+			}
+			kpiFormula = this.getKpiFormula(kpi, kpiFormula);
+			$('html').block({
+				'message': null
+			});
+			$.ajax({
+				url: restAddress + 'proasense_hella/kpi_formula',
+				type: 'POST',
+				data: '{"type":"UPDATE","data":' + JSON.stringify(kpiFormula) + '}',
+				success: function(result) {
 
-                $('html').block({
-                    'message': null
-                });
-                $.ajax({
-                    url: restAddress + 'proasense_hella/kpi',
-                    type: 'POST',
-                    data: '{"type":"INSERT","data":[' + JSON.stringify(newKpi) + ']}',
-                    success: function(result) {
+					if (result.succeeded) {
+						var tmpObj = jQuery.extend({}, kpi);
+						delete tmpObj.parent_id;
+						delete tmpObj.text;
+						delete tmpObj.children;
+						$.ajax({
+							url: restAddress + 'proasense_hella/kpi',
+							type: 'POST',
+							data: '{"type":"UPDATE","data":' + JSON.stringify(tmpObj) + '}',
+							success: function(result) {
+								$('html').unblock();
 
-                        if (result.succeeded) {
+								if (result.succeeded) {
+									$.notify('KPI updated', 'success');
+									kpiInfo[kpiIndex] = kpi;
+									kpiFormulas[kpiFormulaIndex] = kpiFormula;
+									$('#KPITree').jstree().rename_node(kpi.id, kpi.text);
+									activeScreen.closeScreen();
+								} else {
+									$.notify('KPI update failed');
+								}
+							}
+						});
+					} else {
+						$('html').unblock();
+						$.notify('Formula update failed');
+					}
+				}
+			});
 
-                            newKpiFormula.kpi_id = result.insertId[0];
-                            newKpi.id = result.insertId[0];
-                            $.ajax({
-                                url: restAddress + 'proasense_hella/kpi_formula',
-                                type: 'POST',
-                                data: '{"type":"INSERT","data":[' + JSON.stringify(newKpiFormula) + ']}',
-                                success: function(result) {
-                                    $('html').unblock();
-                                    if (result.succeeded) {
-                                        $.notify('KPI added', 'success');
-                                        newKpi.children = [];
-                                        for (var i = 0; i < kpiInfo.length; i++) {
-                                            if (kpiInfo[i].id == newParentId) {
-                                                kpiInfo[i].children.push(newKpi);
-                                                break;
-                                            }
-                                        }
-                                        newKpiFormula.id = result.insertId[0];
-                                        kpiInfo.push(newKpi);
-                                        kpiFormulas.push(newKpiFormula);
-                                        newKpi.text = newKpi.name + delEditBtn;
-                                        $('#KPITree').jstree().create_node(newParentId, jQuery.extend({}, newKpi));
-                                        screen1.closeScreen();
-                                    } else {
-                                        $.notify('Error adding formula');
-                                    }
-                                }
-                            });
-                        } else {
-                            $('html').unblock();
-                            $.notify('Error adding kpi');
-                        }
-                    }
-                });
+		} else {
+			if ($('#calculationType').val() != null && $('#samplingInterval').val() != null && $('#name').val() != "" && $('#description').val() != "") {
+				var newKpi = {};
+				var newKpiFormula = {};
+				newKpiFormula.term1_sensor_id = null;
+				newKpiFormula.operator_1 = null;
+				newKpiFormula.term2_kpi_id = null;
+				newKpiFormula.term2_sensor_id = null;
+				newKpiFormula.operator_2 = null;
+				newKpiFormula.term3_kpi_id = null;
+				newKpiFormula.term3_sensor_id = null;
+				newKpiFormula.criteria = null;
 
-            } else {
-                $.notify('Please fill all the boxes', 'info');
-            }
-        }
-    }
+				newKpi.parent_id = newParentId;
+				newKpi.name = $('#name').val();
+				newKpi.description = $('#description').val();
+				var samplingRate = parseInt($('#samplingRate').val());
+				newKpi.sampling_rate = isNaN(samplingRate) ? 0 : samplingRate;
+				newKpi.sampling_interval = $('#samplingInterval').val();
+				var chk = $('#contextualInformation input');
+				newKpi.context_product = chk[0].checked;
+				newKpi.context_machine = chk[1].checked;
+				newKpi.context_shift = chk[2].checked;
+				newKpi.context_mould = chk[3].checked;
+				newKpi.calculation_type = $('#calculationType').val();
+				newKpiFormula = this.getKpiFormula(newKpi, newKpiFormula);
+
+				$('html').block({
+					'message': null
+				});
+				$.ajax({
+					url: restAddress + 'proasense_hella/kpi',
+					type: 'POST',
+					data: '{"type":"INSERT","data":[' + JSON.stringify(newKpi) + ']}',
+					success: function(result) {
+
+						if (result.succeeded) {
+
+							newKpiFormula.kpi_id = result.insertId[0];
+							newKpi.id = result.insertId[0];
+							$.ajax({
+								url: restAddress + 'proasense_hella/kpi_formula',
+								type: 'POST',
+								data: '{"type":"INSERT","data":[' + JSON.stringify(newKpiFormula) + ']}',
+								success: function(result) {
+									$('html').unblock();
+									if (result.succeeded) {
+										$.notify('KPI added', 'success');
+										newKpi.children = [];
+										for (var i = 0; i < kpiInfo.length; i++) {
+											if (kpiInfo[i].id == newParentId) {
+												kpiInfo[i].children.push(newKpi);
+												break;
+											}
+										}
+										newKpiFormula.id = result.insertId[0];
+										kpiInfo.push(newKpi);
+										kpiFormulas.push(newKpiFormula);
+										newKpi.text = newKpi.name + delEditBtn;
+										$('#KPITree').jstree().create_node(newParentId, jQuery.extend({}, newKpi));
+										screen1.closeScreen();
+									} else {
+										$.notify('Error adding formula');
+									}
+								}
+							});
+						} else {
+							$('html').unblock();
+							$.notify('Error adding kpi');
+						}
+					}
+				});
+
+			} else {
+				$.notify('Please fill all the boxes', 'info');
+			}
+		}
+	}
 }
 
 function Screen2(kpiInfo) {
-    this.kpiInfo = kpiInfo;
+	this.kpiInfo = kpiInfo;
 
-    var scr = this;
+	var scr = this;
 
-    $.get('inc/screen2.inc', function(content) {
-        scr.content = content;
-    });
+	$.get('inc/screen2.inc', function(content) {
+		scr.content = content;
+	});
 
-    this.openScreen = function() {
-        if (loadedKpi != "") {
-            $('.content').html(this.content);
-            $('#cancelBtn').on('click', function(event) {
-                scr.cancelBtn();
-            });
-            $('#addTargetBtn').on('click', function(event) {
-                scr.addTargetBtn();
-            });
-            this.loadElData(loadedKpi)
-            showScreen(true);
-        }
+	this.openScreen = function() {
+		if (loadedKpi != "") {
+			$('.content').html(this.content);
+			$('#cancelBtn').on('click', function(event) {
+				scr.cancelBtn();
+			});
+			$('#addTargetBtn').on('click', function(event) {
+				scr.addTargetBtn();
+			});
+			this.loadElData(loadedKpi)
+			showScreen(true);
+		}
 
-    }
+	}
 
-    this.loadElData = function(elId) {
-        for (var i = 0; i < this.kpiInfo.length; i++) {
-            if (this.kpiInfo[i].id == elId) {
-                this.changeLoadedKpi(elId);
-                el = this.kpiInfo[i];
-                var firstRow = '<tr bgcolor="#cccccc">'
-                var listRow = '';
-                var listCol1 = '';
-                var listCol2 = '';
+	this.loadElData = function(elId) {
+		for (var i = 0; i < this.kpiInfo.length; i++) {
+			if (this.kpiInfo[i].id == elId) {
+				this.changeLoadedKpi(elId);
+				el = this.kpiInfo[i];
+				var firstRow = '<tr bgcolor="#cccccc">'
+				var listRow = '';
+				var listCol1 = '';
+				var listCol2 = '';
 
-                var contexts = ['context_product', 'context_machine', 'context_shift', 'context_mould'];
+				var contexts = ['context_product', 'context_machine', 'context_shift', 'context_mould'];
 
-                var options = '';
-                for (var j = 0; j < $('#contextualInformation input').length; j++) {
-                    options = '';
-                    var chk = $('#contextualInformation input')[j];
-                    chk.checked = el[contexts[j]];
-                    if (chk.checked) {
-                        firstRow = firstRow + '<td>' + chk.name + '</td>';
-                        var tmpVect = eval(chk.value.split('_')[0] + 's');
-                        for (var k = 0; k < tmpVect.length; k++) {
-                            options = options + '<option value=' + tmpVect[k].id + '>' + tmpVect[k].name + '</option>';
-                        }
-                        listRow = listRow + '<tr><td width="300px">' + chk.name + '</td><td><select data-value="' + chk.value + '">' + options + '</select></td></tr>';
+				var options = '';
+				for (var j = 0; j < $('#contextualInformation input').length; j++) {
+					options = '';
+					var chk = $('#contextualInformation input')[j];
+					chk.checked = el[contexts[j]];
+					if (chk.checked) {
+						firstRow = firstRow + '<td>' + chk.name + '</td>';
+						var tmpVect = eval(chk.value.split('_')[0] + 's');
+						for (var k = 0; k < tmpVect.length; k++) {
+							options = options + '<option value=' + tmpVect[k].id + '>' + tmpVect[k].name + '</option>';
+						}
+						listRow = listRow + '<tr><td width="300px">' + chk.name + '</td><td><select data-value="' + chk.value + '">' + options + '</select></td></tr>';
 
-                    }
-
-
-                }
-                options = '';
-                for (var j = 0; j < this.kpiInfo.length; j++) {
-                    options = options + '<option value=' + this.kpiInfo[j].id + '>' + this.kpiInfo[j].name + '</option>';
-                }
-                listRow = listRow + '<tr><td width="150px">KPI Target</td><td><select id="kpiList" data-value="id">' + options + '</select></td></tr>';
-                $('#targetList').append(listRow);
-                firstRow = firstRow + '<td>Lower bound</td><td>Upper bound</td><td colspan=2>KPI Target</td><tr>';
-                $('#targetTable').append(firstRow);
-                var toAppend = '';
-
-                for (var j = 0; j < kpiTargets.length; j++) {
-                    if (kpiTargets[j].kpi_id != el.id) {
-                        continue;
-                    }
-                    toAppend = '<tr id=' + kpiTargets[j].id + '>';
-                    var chk = $('#contextualInformation input:checked');
-                    for (var k = 0; k < chk.length; k++) {
+					}
 
 
-                        toAppend = toAppend + '<td>' + eval('get' + chk[k].name.split(' ')[0] + '(' + kpiTargets[j][chk[k].value] + ').name'); + '</td>';
-                    }
-                    toAppend = toAppend + '<td>' + kpiTargets[j].lower_bound + '</td><td>' + kpiTargets[j].upper_bound + '</td>';
-                    toAppend = toAppend + '<td>' + getKpi(kpiTargets[j].kpi_id).name + '</td><td width="25px" data-id=' + kpiTargets[j].id + ' style="cursor:pointer" align="center" title="Delete element" ><span class="glyphicon glyphicon-minus" style="color:#333333" aria-hidden="true"></span></td></tr>';
-                    $('#targetTable').append(toAppend);
-                    var scr = this;
-                    $('#targetTable').find('tr:last').find('td:last').click(function(e) {
-                        scr.delTargetInfo(e.currentTarget);
-                    })
-                }
+				}
+				options = '';
+				for (var j = 0; j < this.kpiInfo.length; j++) {
+					options = options + '<option value=' + this.kpiInfo[j].id + '>' + this.kpiInfo[j].name + '</option>';
+				}
+				listRow = listRow + '<tr><td width="150px">KPI Target</td><td><select id="kpiList" data-value="id">' + options + '</select></td></tr>';
+				$('#targetList').append(listRow);
+				firstRow = firstRow + '<td>Lower bound</td><td>Upper bound</td><td colspan=2>KPI Target</td><tr>';
+				$('#targetTable').append(firstRow);
+				var toAppend = '';
 
-                return true;
-            }
-        }
-        return false;
-    }
-
-    this.saveLoadedElement = function() {
-        var id = this.loadedKpi;
-        if (id != "") {
-            var query = '[{';
-            var selectBoxes = $('select');
-            for (var j = 0; j < selectBoxes.length; j++) {
-                query = query + '"' + selectBoxes.eq(j).attr('data-value') + '":' + selectBoxes.eq(j).find('option:selected').val() + ',';
-            }
-            query = query + '"kpi_id":' + loadedKpi + ',"upper_bound":"' + $('#upperBoundBox').val() + '","lower_bound":"' + $('#lowerBoundBox').val() + '"}]';
-            $('html').block({
-                'message': null
-            });
-            $.ajax({
-                url: restAddress + 'proasense_hella/kpi_target',
-                type: 'POST',
-                data: '{"type":"INSERT","data":' + query + '}',
-                success: function(response) {
-                    $('html').unblock();
-                    if (response.succeeded) {
-                        var newTgId = response.insertId[0];
-                        var newTgObj = JSON.parse(query)[0];
-                        newTgObj.id = newTgId;
-                        if (newTgObj.lower_bound == "") {
-                            newTgObj.lower_bound = 0;
-                        }
-                        if (newTgObj.upper_bound == "") {
-                            newTgObj.upper_bound = 0;
-                        }
-                        kpiTargets.push(newTgObj);
-                        var rows = $('#targetList').find('tr');
-                        var toAppend = '<tr>'
-                        var targetInfoEl = {}
-                        var kpiTargetBoxVal = $('#kpiTargetBox').val()
-                        var upperBoundBox = $('#upperBoundBox').val()
-                        var lowerBoundBox = $('#lowerBoundBox').val()
-
-                        for (var j = 0; j < rows.length - 1; j++) {
-                            toAppend = toAppend + '<td>' + rows.eq(j).find('select option:selected').text() + '</td>';
-                        }
-
-                        toAppend = toAppend + '<td>' + (lowerBoundBox == '' ? 0 : lowerBoundBox) + '</td><td>' + (upperBoundBox == '' ? 0 : upperBoundBox) + '</td>';
-                        toAppend = toAppend + '<td>' + $('select:last').find('option:selected').text() + '</td><td width="25px" data-id=' + newTgId + ' style="cursor:pointer" align="center" title="Delete element" ><span class="glyphicon glyphicon-minus" style="color:#333333" aria-hidden="true"></span></td></tr>';
-                        $('#targetTable').append(toAppend);
+				for (var j = 0; j < kpiTargets.length; j++) {
+					if (kpiTargets[j].kpi_id != el.id) {
+						continue;
+					}
+					toAppend = '<tr id=' + kpiTargets[j].id + '>';
+					var chk = $('#contextualInformation input:checked');
+					for (var k = 0; k < chk.length; k++) {
 
 
+						toAppend = toAppend + '<td>' + eval('get' + chk[k].name.split(' ')[0] + '(' + kpiTargets[j][chk[k].value] + ').name'); + '</td>';
+					}
+					toAppend = toAppend + '<td>' + kpiTargets[j].lower_bound + '</td><td>' + kpiTargets[j].upper_bound + '</td>';
+					toAppend = toAppend + '<td>' + getKpi(kpiTargets[j].kpi_id).name + '</td><td width="25px" data-id=' + kpiTargets[j].id + ' style="cursor:pointer" align="center" title="Delete element" ><span class="glyphicon glyphicon-minus" style="color:#333333" aria-hidden="true"></span></td></tr>';
+					$('#targetTable').append(toAppend);
+					var scr = this;
+					$('#targetTable').find('tr:last').find('td:last').click(function(e) {
+						scr.delTargetInfo(e.currentTarget);
+					})
+				}
 
-                        $('#targetTable').find('tr:last').find('td:last').click(function(e) {
-                            scr.delTargetInfo(e.currentTarget);
-                        })
-                        $.notify('New target added', 'success');
-                    } else {
-                        $.notify("Violation of primary key constraint.");
-                    }
+				return true;
+			}
+		}
+		return false;
+	}
 
-                }
-            });
+	this.saveLoadedElement = function() {
+		var id = this.loadedKpi;
+		if (id != "") {
+			var query = '[{';
+			var selectBoxes = $('select');
+			for (var j = 0; j < selectBoxes.length; j++) {
+				query = query + '"' + selectBoxes.eq(j).attr('data-value') + '":' + selectBoxes.eq(j).find('option:selected').val() + ',';
+			}
+			query = query + '"kpi_id":' + loadedKpi + ',"upper_bound":"' + $('#upperBoundBox').val() + '","lower_bound":"' + $('#lowerBoundBox').val() + '"}]';
+			$('html').block({
+				'message': null
+			});
+			$.ajax({
+				url: restAddress + 'proasense_hella/kpi_target',
+				type: 'POST',
+				data: '{"type":"INSERT","data":' + query + '}',
+				success: function(response) {
+					$('html').unblock();
+					if (response.succeeded) {
+						var newTgId = response.insertId[0];
+						var newTgObj = JSON.parse(query)[0];
+						newTgObj.id = newTgId;
+						if (newTgObj.lower_bound == "") {
+							newTgObj.lower_bound = 0;
+						}
+						if (newTgObj.upper_bound == "") {
+							newTgObj.upper_bound = 0;
+						}
+						kpiTargets.push(newTgObj);
+						var rows = $('#targetList').find('tr');
+						var toAppend = '<tr>'
+						var targetInfoEl = {}
+						var kpiTargetBoxVal = $('#kpiTargetBox').val()
+						var upperBoundBox = $('#upperBoundBox').val()
+						var lowerBoundBox = $('#lowerBoundBox').val()
+
+						for (var j = 0; j < rows.length - 1; j++) {
+							toAppend = toAppend + '<td>' + rows.eq(j).find('select option:selected').text() + '</td>';
+						}
+
+						toAppend = toAppend + '<td>' + (lowerBoundBox == '' ? 0 : lowerBoundBox) + '</td><td>' + (upperBoundBox == '' ? 0 : upperBoundBox) + '</td>';
+						toAppend = toAppend + '<td>' + $('select:last').find('option:selected').text() + '</td><td width="25px" data-id=' + newTgId + ' style="cursor:pointer" align="center" title="Delete element" ><span class="glyphicon glyphicon-minus" style="color:#333333" aria-hidden="true"></span></td></tr>';
+						$('#targetTable').append(toAppend);
 
 
 
-        }
-    }
-    this.delTargetInfo = function(element) {
-        var id = element.dataset.id
-        $('html').block({
-            'message': null
-        });
-        $.ajax({
-            url: restAddress + 'proasense_hella/kpi_target',
-            type: 'POST',
-            data: '{"type":"DELETE","data":[{"id":' + id + '}]}',
-            success: function(response) {
-                $('html').unblock();
-                if (response.succeeded) {
-                    $.notify('Target deleted', 'success');
-                    element.parentElement.remove();
-                    for (i = 0; i < kpiTargets.length; i++) {
-                        if (kpiTargets[i].id == id) {
-                            kpiTargets.splice(i, 1);
-                            break;
-                        }
-                    }
-                } else {
-                    $.notify('Error deleting target');
-                }
-            }
-        });
+						$('#targetTable').find('tr:last').find('td:last').click(function(e) {
+							scr.delTargetInfo(e.currentTarget);
+						})
+						$.notify('New target added', 'success');
+					} else {
+						$.notify("Violation of primary key constraint.");
+					}
+
+				}
+			});
 
 
-    }
-    this.closeScreen = function() {
-        this.changeLoadedKpi();
-        showScreen(false);
-        $('.content').html('');
-    }
-    this.cancelBtn = function() {
-        this.closeScreen();
-    }
-    this.addTargetBtn = function() {
-        this.saveLoadedElement();
-    }
 
-    this.changeLoadedKpi = function(elId) {
-        var oldId = loadedKpi;
-        loadedKpi = arguments.length > 0 ? elId : "";
-        var tree = $("#KPITree").jstree(true);
-        var toDelete = true;
-        for (var i = 0; i < this.kpiInfo.length; i++) {
-            if (oldId == this.kpiInfo[i].id) {
-                toDelete = false;
-                break;
-            }
-        }
-        if (toDelete) {
-            tree.delete_node(oldId);
-            if (arguments.length > 0) {
-                if (!tree.get_text(elId).endsWith('</span>')) {
-                    tree.edit(elId);
-                }
-            }
-        }
-    }
+		}
+	}
+	this.delTargetInfo = function(element) {
+		var id = element.dataset.id
+		$('html').block({
+			'message': null
+		});
+		$.ajax({
+			url: restAddress + 'proasense_hella/kpi_target',
+			type: 'POST',
+			data: '{"type":"DELETE","data":[{"id":' + id + '}]}',
+			success: function(response) {
+				$('html').unblock();
+				if (response.succeeded) {
+					$.notify('Target deleted', 'success');
+					element.parentElement.remove();
+					for (i = 0; i < kpiTargets.length; i++) {
+						if (kpiTargets[i].id == id) {
+							kpiTargets.splice(i, 1);
+							break;
+						}
+					}
+				} else {
+					$.notify('Error deleting target');
+				}
+			}
+		});
+
+
+	}
+	this.closeScreen = function() {
+		this.changeLoadedKpi();
+		showScreen(false);
+		$('.content').html('');
+	}
+	this.cancelBtn = function() {
+		this.closeScreen();
+	}
+	this.addTargetBtn = function() {
+		this.saveLoadedElement();
+	}
+
+	this.changeLoadedKpi = function(elId) {
+		var oldId = loadedKpi;
+		loadedKpi = arguments.length > 0 ? elId : "";
+		var tree = $("#KPITree").jstree(true);
+		var toDelete = true;
+		for (var i = 0; i < this.kpiInfo.length; i++) {
+			if (oldId == this.kpiInfo[i].id) {
+				toDelete = false;
+				break;
+			}
+		}
+		if (toDelete) {
+			tree.delete_node(oldId);
+			if (arguments.length > 0) {
+				if (!tree.get_text(elId).endsWith('</span>')) {
+					tree.edit(elId);
+				}
+			}
+		}
+	}
 
 
 }
 
 
 function ScreenGraph(kpiInfo) {
-    this.testGraphData =JSON.parse('{"data":['
-    +'[3,4,1,6,4,8,null,8,6,3],'
-    +'[7,3,9,2,4,5,9,3,4,5],'
-    +'[2,5,6,2,14,6,7,6,3,9]],'
-    +'"subTitle":"Source: use case data",'
-    +'"legend":["A","B","C"],'
-    +'"title":"Availability",'
-    +'"labels":["December","January","February","March","April","May"]}');
-    this.kpiInfo = kpiInfo;
-    var scr = this;
-    $.get('inc/screengraph.inc', function(content) {
-        scr.content = content;
-    });
-    
-    this.toPercentage = function()
-    {
+	this.testGraphData = JSON.parse('{"data":[' + '[3,4,1,6,4,8,null,8,6,3],' + '[7,3,9,2,4,5,9,3,4,5],' + '[2,5,6,2,14,6,7,6,3,9]],' + '"subTitle":"Source: use case data",' + '"legend":["A","B","C"],' + '"title":"Availability",' + '"labels":["December","January","February","March","April","May"]}');
+	this.kpiInfo = kpiInfo;
+	var scr = this;
+	$.get('inc/screengraph.inc', function(content) {
+		scr.content = content;
+	});
+
+	this.toPercentage = function() {
 		var yLabels = $('#chart').find('text[opacity=1]');
-		for(var i=0;i<yLabels.length;i++)
-		{
-			yLabels.eq(i).text(yLabels.eq(i).text()*100+"%");
+		for (var i = 0; i < yLabels.length; i++) {
+			yLabels.eq(i).text(yLabels.eq(i).text() * 100 + "%");
 		}
 	}
 	this.getRandomColor = function() {
 		var letters = '0123456789ABCDEF'.split('');
 		var color = '#';
-		for (var i = 0; i < 6; i++ ) {
-			color += letters[Math.floor(Math.seededRandom(16,0))];
+		for (var i = 0; i < 6; i++) {
+			color += letters[Math.floor(Math.seededRandom(16, 0))];
 		}
 		return color;
 	}
-    this.adjustGraph = function() {
-        var chart = $('#chart')
-        if (chart.length>0) {
-            chart.find('svg').attr('width', 0);
-            if(chart.chart('config')!==false)
-            {
+	this.adjustGraph = function() {
+		var chart = $('#chart')
+		if (chart.length > 0) {
+			chart.find('svg').attr('width', 0);
+			if (chart.chart('config') !== false) {
 				chart.chart();
 				chart.find('svg').attr('width', 400);
 				chart.chart('config').features.legend.x = $('#chart').width() - 100;
@@ -757,236 +746,228 @@ function ScreenGraph(kpiInfo) {
 					objs.eq(i + objs.length - len).attr('fill', color);
 				}
 			}
-        }
-    }
-    this.adjustHeatMap = function() {
-		var heatMap=$('#heatMap');
-		if(heatMap.length>0)
-		{
+		}
+	}
+	this.adjustHeatMap = function() {
+		var heatMap = $('#heatMap');
+		if (heatMap.length > 0) {
 			this.initializeHeatMap(this.heatMapData);
 		}
-    }
+	}
 
-    $(window).resize(function() {
-        scrGraph.adjustGraph();
-        scrGraph.adjustHeatMap();
+	$(window).resize(function() {
+		scrGraph.adjustGraph();
+		scrGraph.adjustHeatMap();
 
-    });
+	});
 
 	this.updateGraph = function() {
-        var graphContextualInformation = $('#graphTable').find('input:checked').val();
-        var graphStartTime = $('#fromDateChart').handleDtpicker('getDate').getTime();
-        var graphEndTime = $('#toDateChart').handleDtpicker('getDate').getTime();
-        var graphGranularity = $('#granularityChart').val();
+		var graphContextualInformation = $('#graphTable').find('input:checked').val();
+		var graphStartTime = $('#fromDateChart').handleDtpicker('getDate').getTime();
+		var graphEndTime = $('#toDateChart').handleDtpicker('getDate').getTime();
+		var graphGranularity = $('#granularityChart').val();
 		//scr.initializeGraph(this.testGraphData);
-        $.ajax({
-			url:restAddress+"func/getGraphData?kpiId="+loadedKpi+"&contextualInformation="+graphContextualInformation+"&startTime="+graphStartTime+"&endTime="+graphEndTime+"&granularity="+graphGranularity,
-			type:"GET",
-			success:function(graphData)
-			{
+		$.ajax({
+			url: restAddress + "func/getGraphData?kpiId=" + loadedKpi + "&contextualInformation=" + graphContextualInformation + "&startTime=" + graphStartTime + "&endTime=" + graphEndTime + "&granularity=" + graphGranularity,
+			type: "GET",
+			success: function(graphData) {
 				scr.initializeGraph(graphData);
 			},
 		});
 	}
 	this.updateHeatMap = function() {
-		var heatMapContextualInformation='[';
+		var heatMapContextualInformation = '[';
 		var inputs = $('#heatMapTable').find('input:checked');
-		for(var i=0;i<inputs.length;i++)
-		{
-			heatMapContextualInformation=heatMapContextualInformation+inputs.eq(i).val();
-			if(i<inputs.length-1)
-			{
-				heatMapContextualInformation=heatMapContextualInformation+',';
+		for (var i = 0; i < inputs.length; i++) {
+			heatMapContextualInformation = heatMapContextualInformation + inputs.eq(i).val();
+			if (i < inputs.length - 1) {
+				heatMapContextualInformation = heatMapContextualInformation + ',';
 			}
 		}
-		heatMapContextualInformation=heatMapContextualInformation+']';
-		var heatMapStartTime =  $('#fromDateHeatMap').handleDtpicker('getDate').getTime();
+		heatMapContextualInformation = heatMapContextualInformation + ']';
+		var heatMapStartTime = $('#fromDateHeatMap').handleDtpicker('getDate').getTime();
 		var heatMapEndTime = $('#toDateHeatMap').handleDtpicker('getDate').getTime();
 		var heatMapGranularity = $('#granularityHeatMap').val()
 		$.ajax({
-			url:restAddress + "func/getHeatMapData?kpiId="+loadedKpi+"&contextualInformation="+heatMapContextualInformation+"&startTime="+heatMapStartTime+"&endTime="+heatMapEndTime+"&granularity="+heatMapGranularity,
-			type:"GET",
-			success:function(heatMapData)
-			{
+			url: restAddress + "func/getHeatMapData?kpiId=" + loadedKpi + "&contextualInformation=" + heatMapContextualInformation + "&startTime=" + heatMapStartTime + "&endTime=" + heatMapEndTime + "&granularity=" + heatMapGranularity,
+			type: "GET",
+			success: function(heatMapData) {
 				scr.initializeHeatMap(heatMapData)
 			}
 		});
 	}
-    this.connect = function() {
-        if (this.socket !== undefined) {
-            this.socket.disconnect();
-        }
-        this.socket = io(socketIOAddress, {
-            'force new connection': true,
-            'transports':['polling']
-        });
-        this.socket.on('message', function(data) {
-            var KPIName = "";
-            var KPIRecName = data.kpi === undefined ? "" : data.kpi;
-            for (var i = 0; i < scr.kpiInfo.length; i++) {
-                if (scr.kpiInfo[i].id == loadedKpi) {
-                    KPIName = scr.kpiInfo[i].name;
-                    break;
-                }
-            }
-            if (KPIName == KPIRecName) {
-                scr.totalUnits(data.totalUnits);
-                scr.scrapRate(data.scrapRate);
-                scr.oee(data.oee);
-            }
+	this.connect = function() {
+		if (this.socket !== undefined) {
+			this.socket.disconnect();
+		}
+		this.socket = io(socketIOAddress, {
+			'force new connection': true,
+			'transports': ['polling']
+		});
+		this.socket.on('message', function(data) {
+			var KPIName = "";
+			var KPIRecName = data.kpi === undefined ? "" : data.kpi;
+			for (var i = 0; i < scr.kpiInfo.length; i++) {
+				if (scr.kpiInfo[i].id == loadedKpi) {
+					KPIName = scr.kpiInfo[i].name;
+					break;
+				}
+			}
+			if (KPIName == KPIRecName) {
+				scr.totalUnits(data.totalUnits);
+				scr.scrapRate(data.scrapRate);
+				scr.oee(data.oee);
+			}
 
-        });
-    }
+		});
+	}
 
-    this.disconnect = function() {
-        if (this.socket !== undefined) {
-            this.socket.disconnect();
-        }
-    }
+	this.disconnect = function() {
+		if (this.socket !== undefined) {
+			this.socket.disconnect();
+		}
+	}
 
-    this.liveSample = function() {
+	this.liveSample = function() {
 
-        setInterval(function() {
-            scr.scrapRate(parseInt(Math.random() * 100 + 0.5))
-            scr.oee(parseInt(Math.random() * 100 + 0.5))
-            scr.totalUnits(parseInt(Math.random() * 20 + 0.5))
-        }, 1000)
-    }
+		setInterval(function() {
+			scr.scrapRate(parseInt(Math.random() * 100 + 0.5))
+			scr.oee(parseInt(Math.random() * 100 + 0.5))
+			scr.totalUnits(parseInt(Math.random() * 20 + 0.5))
+		}, 1000)
+	}
 
-    this.totalUnits = function(val) {
-        if (arguments.length == 0) {
-            return parseFloat($('#totalUnits').text());
-        } else if (val !== '' && !isNaN(val) && $('#totalUnits').length > 0) {
-            $('#totalUnits').text(eval(val));
-        }
-    }
+	this.totalUnits = function(val) {
+		if (arguments.length == 0) {
+			return parseFloat($('#totalUnits').text());
+		} else if (val !== '' && !isNaN(val) && $('#totalUnits').length > 0) {
+			$('#totalUnits').text(eval(val));
+		}
+	}
 
-    this.scrapRate = function(val) {
-        if (arguments.length == 0) {
-            return parseFloat(this.gage.txtValue[0].textContent)
-        } else if (val !== '' && !isNaN(val) && this.gage !== undefined) {
-            this.gage.refresh(eval(val));
-        }
-    }
+	this.scrapRate = function(val) {
+		if (arguments.length == 0) {
+			return parseFloat(this.gage.txtValue[0].textContent)
+		} else if (val !== '' && !isNaN(val) && this.gage !== undefined) {
+			this.gage.refresh(eval(val));
+		}
+	}
 
-    this.oee = function(val) {
-        if (arguments.length == 0) {
-            return parseFloat($('.progress-bar').text());
-        } else if (val !== '' && !isNaN(val) && $('.progress-bar').length > 0) {
-            $('.progress-bar').text(eval(val) + "%")
-            $('.progress-bar').css('width', eval(val) + '%').attr('aria-valuenow', eval(val));
-        }
-    }
+	this.oee = function(val) {
+		if (arguments.length == 0) {
+			return parseFloat($('.progress-bar').text());
+		} else if (val !== '' && !isNaN(val) && $('.progress-bar').length > 0) {
+			$('.progress-bar').text(eval(val) + "%")
+			$('.progress-bar').css('width', eval(val) + '%').attr('aria-valuenow', eval(val));
+		}
+	}
 
 
-	
-    this.openScreen = function(id) {
-        $('.content').html(this.content);
-        var radios = $('#graphTable').find('td').slice(1, 5);
-        var checkBoxes = $('#heatMapTable').find('td').slice(0, 4);        
-        if (arguments.length > 0) {
-            for (var i = 0; i < this.kpiInfo.length; i++) {
-                if (this.kpiInfo[i].id == id) {
-                    var element = this.kpiInfo[i];
-                    for (var j = 0; j < 4; j++) {
-                        var contains = element[radios.eq(j).attr('data-cInfo')];
-                        radios.eq(j).attr('hidden', !contains);
-                        checkBoxes.eq(j).attr('hidden', !contains);
-                    }
-                    break;
-                }
-            }
-        }
-        var graphContextualInformation = $('#graphTable').find('input:checked').val();
-        
-        var graphStartTime = (new Date(2014,11,31)).getTime();
 
-		var graphEndTime = (new Date(2015,4,31)).getTime();
-        var graphGranularity = $('#granularityChart').val();
-        $('#graphButton').on('click', function(event) {
-            scr.updateGraph();
-        });
-        $('#heatMapButton').on('click', function(event) {
-            scr.updateHeatMap();
-        });
-        //this.initializeGraph(this.testGraphData,true);
-        $.ajax({
-			url:restAddress+"func/getGraphData?kpiId="+loadedKpi+"&contextualInformation="+graphContextualInformation+"&granularity="+graphGranularity+"&startTime="+graphStartTime+"&endTime="+graphEndTime,
-			type:"GET",
-			success:function(graphData)
-			{
+	this.openScreen = function(id) {
+		$('.content').html(this.content);
+		var radios = $('#graphTable').find('td').slice(1, 5);
+		var checkBoxes = $('#heatMapTable').find('td').slice(0, 4);
+		if (arguments.length > 0) {
+			for (var i = 0; i < this.kpiInfo.length; i++) {
+				if (this.kpiInfo[i].id == id) {
+					var element = this.kpiInfo[i];
+					for (var j = 0; j < 4; j++) {
+						var contains = element[radios.eq(j).attr('data-cInfo')];
+						radios.eq(j).attr('hidden', !contains);
+						checkBoxes.eq(j).attr('hidden', !contains);
+					}
+					break;
+				}
+			}
+		}
+		var graphContextualInformation = $('#graphTable').find('input:checked').val();
+
+		var graphStartTime = (new Date(2014, 11, 31)).getTime();
+
+		var graphEndTime = (new Date(2015, 4, 31)).getTime();
+		var graphGranularity = $('#granularityChart').val();
+		$('#graphButton').on('click', function(event) {
+			scr.updateGraph();
+		});
+		$('#heatMapButton').on('click', function(event) {
+			scr.updateHeatMap();
+		});
+		//this.initializeGraph(this.testGraphData,true);
+		$.ajax({
+			url: restAddress + "func/getGraphData?kpiId=" + loadedKpi + "&contextualInformation=" + graphContextualInformation + "&granularity=" + graphGranularity + "&startTime=" + graphStartTime + "&endTime=" + graphEndTime,
+			type: "GET",
+			success: function(graphData) {
 				scr.initializeGraph(graphData);
 			},
 		});
-		var heatMapContextualInformation='[]'
-		var heatMapStartTime = (new Date()).getTime() - 3*30*24*60*60*1000; //3 Months ago
-		var heatMapEndTime = (new Date()).getTime() 
+		var heatMapContextualInformation = '[]'
+		var heatMapStartTime = (new Date()).getTime() - 3 * 30 * 24 * 60 * 60 * 1000; //3 Months ago
+		var heatMapEndTime = (new Date()).getTime()
 		var heatMapGranularity = $('#granularityHeatMap').val()
 		$.ajax({
-			url:restAddress + "func/getHeatMapData?kpiId="+loadedKpi+"&contextualInformation="+heatMapContextualInformation+"&startTime="+heatMapStartTime+"&endTime="+heatMapEndTime+"&granularity="+heatMapGranularity,
-			type:"GET",
-			success:function(heatMapData)
-			{
+			url: restAddress + "func/getHeatMapData?kpiId=" + loadedKpi + "&contextualInformation=" + heatMapContextualInformation + "&startTime=" + heatMapStartTime + "&endTime=" + heatMapEndTime + "&granularity=" + heatMapGranularity,
+			type: "GET",
+			success: function(heatMapData) {
 				scr.initializeHeatMap(heatMapData)
 			}
 		});
 
 
-        this.gage = new JustGage({
-            id: "gauge",
-            value: 0,
-            min: 0,
-            max: 100,
-            titleFontColor: "#000",
-            titleFontSize: 20,
-            title: "Scrap rate",
-        });
-        $.ajax({
-			url:restAddress+"func/getRealTimeKpis?kpiId="+loadedKpi,
-			type:"GET",
-			success:function(realTimeKpisData)
-			{
+		this.gage = new JustGage({
+			id: "gauge",
+			value: 0,
+			min: 0,
+			max: 100,
+			titleFontColor: "#000",
+			titleFontSize: 20,
+			title: "Scrap rate",
+		});
+		$.ajax({
+			url: restAddress + "func/getRealTimeKpis?kpiId=" + loadedKpi,
+			type: "GET",
+			success: function(realTimeKpisData) {
 				scr.totalUnits(realTimeKpisData.totalUnits);
 				scr.scrapRate(realTimeKpisData.scrapRate);
 				scr.oee(realTimeKpisData.oee);
 			},
 		});
 
-   		var firstDate = new Date(2014,11,31);
+		var firstDate = new Date(2014, 11, 31);
 
-		var secondDate = new Date(2015,4,31);
-		
-        $('#fromDateChart').appendDtpicker({
-                "dateOnly": true,
-                "onShow": function(handler) {},
-                "onHide": function(handler) {}
-            },
-            firstDate);
+		var secondDate = new Date(2015, 4, 31);
 
-        $('#toDateChart').appendDtpicker({
-                "dateOnly": true,
-                "onShow": function(handler) {},
-                "onHide": function(handler) {}
-            },
-            secondDate);
-        $('#fromDateHeatMap').appendDtpicker({
-                "dateOnly": true,
-                "onShow": function(handler) {},
-                "onHide": function(handler) {}
-            },
-            firstDate);
+		$('#fromDateChart').appendDtpicker({
+				"dateOnly": true,
+				"onShow": function(handler) {},
+				"onHide": function(handler) {}
+			},
+			firstDate);
 
-        $('#toDateHeatMap').appendDtpicker({
-                "dateOnly": true,
-                "onShow": function(handler) {},
-                "onHide": function(handler) {}
-            },
-            secondDate);
-        showScreen(true);
+		$('#toDateChart').appendDtpicker({
+				"dateOnly": true,
+				"onShow": function(handler) {},
+				"onHide": function(handler) {}
+			},
+			secondDate);
+		$('#fromDateHeatMap').appendDtpicker({
+				"dateOnly": true,
+				"onShow": function(handler) {},
+				"onHide": function(handler) {}
+			},
+			firstDate);
 
-        this.connect();
+		$('#toDateHeatMap').appendDtpicker({
+				"dateOnly": true,
+				"onShow": function(handler) {},
+				"onHide": function(handler) {}
+			},
+			secondDate);
+		showScreen(true);
 
-    }
+		this.connect();
+
+	}
 
 	/**
 	 * numSeries: Number of series in the graph;
@@ -995,37 +976,35 @@ function ScreenGraph(kpiInfo) {
 	 * Input B: Receives sets of values in the following format: [1,2,34,12.2,...]
 	 *
 	 * Output: Formatted series for the graph as an object as: serieN:[1,2,34,12.2,...]
-	**/
+	 **/
 	this.graphSeriesValues = function(seriesData) {
 		var graphSeries = {};
 
-		if (typeof(seriesData)=="object"){
+		if (typeof(seriesData) == "object") {
 			console.log("Received values as objects. Each a set of numbers (aka serie).");
-			for (var i=0; i<seriesData.length;i++){
-				graphSeries["serie"+(i+1)] = seriesData[i];
+			for (var i = 0; i < seriesData.length; i++) {
+				graphSeries["serie" + (i + 1)] = seriesData[i];
 			}
-		}
-		else
+		} else
 			console.log("Sorry. No valid values. Neither numbers or objects in the right format received.");
 
 		return graphSeries;
 	}
 
 
-    this.closeScreen = function() {
-        showScreen(false);
-        $('.content').html('');
-        this.disconnect();
-    }
-    
-    this.initializeHeatMap = function(heatMapData)
-    {
+	this.closeScreen = function() {
+		showScreen(false);
+		$('.content').html('');
+		this.disconnect();
+	}
+
+	this.initializeHeatMap = function(heatMapData) {
 		this.heatMapData = heatMapData;
-		var factor = heatMapData.xLabels.length/6;
+		var factor = heatMapData.xLabels.length / 6;
 		$('#heatMap').empty();
 		$('#heatMap').width(0);
 		var containerWidth = $('#heatMapTable').find('td').eq(4).width();
-		var width = containerWidth < 550*factor ? 550*factor : containerWidth > 800*factor ? 800*factor : containerWidth;
+		var width = containerWidth < 550 * factor ? 550 * factor : containerWidth > 800 * factor ? 800 * factor : containerWidth;
 		$('#heatMap').width(width);
 		var margin = {
 				top: 30,
@@ -1033,8 +1012,8 @@ function ScreenGraph(kpiInfo) {
 				bottom: 50,
 				left: 80
 			},
-			height = (201 - margin.top - margin.bottom)*heatMapData.yLabels.length,
-			gridSize = Math.floor(width / (heatMapData.xLabels.length+1)),
+			height = (201 - margin.top - margin.bottom) * heatMapData.yLabels.length,
+			gridSize = Math.floor(width / (heatMapData.xLabels.length + 1)),
 			gridHeight = 118,
 			legendElementWidth = gridSize,
 			buckets = 9,
@@ -1057,13 +1036,13 @@ function ScreenGraph(kpiInfo) {
 				return i * gridHeight;
 			})
 			.style("text-anchor", "end")
-			.attr("transform", "translate(-6," + gridSize /1.5 + ")")
+			.attr("transform", "translate(-6," + gridSize / 1.5 + ")")
 			.attr("class", function(d, i) {
 				return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-workweek" : "dayLabel mono axis");
 			});
 
 		var xLabels = svg.selectAll(".timeLabel")
-			.data( heatMapData.xLabels)
+			.data(heatMapData.xLabels)
 			.enter().append("text")
 			.text(function(d) {
 				return d;
@@ -1092,10 +1071,10 @@ function ScreenGraph(kpiInfo) {
 		cards.append("title");
 
 		cards.enter().append("rect")
-			.attr("varX",function(d){
+			.attr("varX", function(d) {
 				return d.varX
 			})
-			.attr("varY",function(d){
+			.attr("varY", function(d) {
 				return d.varY
 			})
 			.attr("x", function(d) {
@@ -1105,11 +1084,19 @@ function ScreenGraph(kpiInfo) {
 				return (d.varY - 1) * gridHeight;
 			})
 			.attr("title", function(d) {
-				$(this).tooltip({content:'Value: '+d.value,
-					position:{at:"top-60"},
-					show:{duration:0},
-					hide:{duration:0}});
-				return "Value: "+d.value;
+				$(this).tooltip({
+					content: 'Value: ' + d.value,
+					position: {
+						at: "top-60"
+					},
+					show: {
+						duration: 0
+					},
+					hide: {
+						duration: 0
+					}
+				});
+				return "Value: " + d.value;
 			})
 			.attr("rx", 4)
 			.attr("ry", 4)
@@ -1147,10 +1134,10 @@ function ScreenGraph(kpiInfo) {
 			.attr("class", "legend");
 		legend.append("rect")
 			.attr("x", function(d, i) {
-				return legendElementWidth*factor * i;
+				return legendElementWidth * factor * i;
 			})
 			.attr("y", height + margin.top - 30)
-			.attr("width", legendElementWidth*factor)
+			.attr("width", legendElementWidth * factor)
 			.attr("height", gridHeight / 6)
 			.style("fill", function(d, i) {
 				return colorsLegend[i];
@@ -1162,7 +1149,7 @@ function ScreenGraph(kpiInfo) {
 				return "≥ " + Math.round(d);
 			})
 			.attr("x", function(d, i) {
-				return legendElementWidth*factor * i;
+				return legendElementWidth * factor * i;
 			})
 			.attr("y", height + gridHeight - 80);
 		var fillColor = "";
@@ -1174,7 +1161,7 @@ function ScreenGraph(kpiInfo) {
 			function() {
 				$(this).css('fill', fillColor);
 			});
-		
+
 
 		var KPIName = "";
 		for (var i = 0; i < scr.kpiInfo.length; i++) {
@@ -1183,15 +1170,13 @@ function ScreenGraph(kpiInfo) {
 				break;
 			}
 		}
-		$('#heatMapTitle').html('<h4>' + heatMapData.title + '</h4>' + (heatMapData.subTitle!==undefined?'<h5>'+heatMapData.subTitle+'</h5>':''));	
+		$('#heatMapTitle').html('<h4>' + heatMapData.title + '</h4>' + (heatMapData.subTitle !== undefined ? '<h5>' + heatMapData.subTitle + '</h5>' : ''));
 	}
-    
-    this.initializeGraph = function(graphData)
-    {	
+
+	this.initializeGraph = function(graphData) {
 		console.log(graphData);
 		this.graphData = graphData;
-		if(graphData.data!=null)
-		{
+		if (graphData.data != null) {
 			// KPI Chart
 			var len = graphData.data.length;
 			$.elycharts.templates['line_basic_1'] = {
@@ -1237,14 +1222,13 @@ function ScreenGraph(kpiInfo) {
 				},
 				defaultAxis: {
 					labels: true,
-					
+
 				},
 				features: {
-					mousearea:
-					{
-						onMouseClick:function(a,b,c,d){
-							var serieIndex =b.substring(5,b.length)-1;
-							var labelIndex=Math.round((c/(scr.graphData.data[serieIndex].length-1)*(scr.graphData.labels.length-1)));
+					mousearea: {
+						onMouseClick: function(a, b, c, d) {
+							var serieIndex = b.substring(5, b.length) - 1;
+							var labelIndex = Math.round((c / (scr.graphData.data[serieIndex].length - 1) * (scr.graphData.labels.length - 1)));
 							console.log(scr.graphData.legend[serieIndex]);
 							console.log(scr.graphData.labels[labelIndex]);
 						},
@@ -1258,9 +1242,9 @@ function ScreenGraph(kpiInfo) {
 					legend: {
 						horizontal: false,
 						width: 190,
-						height: 13*len,
+						height: 13 * len,
 						x: 700,
-						y: 330-13*len,
+						y: 330 - 13 * len,
 						dotProps: {
 							stroke: "black",
 							"stroke-width": 0
@@ -1273,26 +1257,30 @@ function ScreenGraph(kpiInfo) {
 				}
 			};
 			$(function() {
-				Math.seed=0;
-				for(i=9;i<=len;i++)
-				{
-					$.elycharts.templates["line_basic_1"].series['serie'+i]={'color':scr.getRandomColor()};
+				Math.seed = 0;
+				for (i = 9; i <= len; i++) {
+					$.elycharts.templates["line_basic_1"].series['serie' + i] = {
+						'color': scr.getRandomColor()
+					};
 				}
 				$.elycharts.templates["line_basic_1"].features.legend.x = $('#chart').width() - 100;
 				$("#chart").chart("clear");
 				$("#chart").chart({
 					template: "line_basic_1",
 					tooltips: function(serieId, valueIndex, allValues, singleValue) {
-						var value = loadedKpi =="4"?'Value: ' + (singleValue*100).toFixed(2)+"%":'Value: ' +singleValue
+						var value = loadedKpi == "4" ? 'Value: ' + (singleValue * 100).toFixed(2) + "%" : 'Value: ' + singleValue
 						return value
 					},
 					legend: graphData.legend,
 					labels: graphData.labels,
 					values: scr.graphSeriesValues(graphData.data),
 					defaultSeries: {
-						tooltip:{
-							width: 90, height:25,
-							contentStyle : { "text-align":"center"}
+						tooltip: {
+							width: 90,
+							height: 25,
+							contentStyle: {
+								"text-align": "center"
+							}
 						},
 						fill: false,
 						stacked: false,
@@ -1308,8 +1296,7 @@ function ScreenGraph(kpiInfo) {
 				});
 				var series = $.elycharts.templates['line_basic_1'].series;
 				var objs = $('#chart').find('[fill="none"]');
-				for (var i = 0; i < len; i++) 
-				{
+				for (var i = 0; i < len; i++) {
 					var color = series['serie' + (i + 1)].color;
 					objs.eq(i + objs.length - len).attr('fill', color);
 				}
@@ -1322,191 +1309,188 @@ function ScreenGraph(kpiInfo) {
 					}
 				}
 
-				$('#chartTitle').html('<h4>' + graphData.title + '</h4>' + (graphData.subTitle!==undefined?'<h5>'+graphData.subTitle+'</h5>':''));
-				
+				$('#chartTitle').html('<h4>' + graphData.title + '</h4>' + (graphData.subTitle !== undefined ? '<h5>' + graphData.subTitle + '</h5>' : ''));
+
 
 			});
-			if($('#graphTable').width()!=$('#page-content-wrapper').width())
-			{
+			if ($('#graphTable').width() != $('#page-content-wrapper').width()) {
 				this.adjustGraph();
 			}
 		}
-		if(loadedKpi=="4")
-		{
+		if (loadedKpi == "4") {
 			this.toPercentage();
 		}
-    };
+	};
 
-    $.elycharts.templates['line_basic_1'] = {
-        type: "line",
-        margins: [10, 110, 20, 50],
-        defaultSeries: {
-            plotProps: {
-                "stroke-width": 4
-            },
-            dot: true,
-            dotProps: {
-                stroke: "white",
-                "stroke-width": 2
-            }
-        },
-        series: {
-            serie1: {
-                color: "#7CB5EC"
-            },
-            serie2: {
-                color: "#000000"
-            },
-            serie3: {
-                color: "#90ED7D"
-            },
-            serie4: {
-                color: "#F7A35C"
-            },
-            serie5: {
-                color: "#8085E9"
-            },
+	$.elycharts.templates['line_basic_1'] = {
+		type: "line",
+		margins: [10, 110, 20, 50],
+		defaultSeries: {
+			plotProps: {
+				"stroke-width": 4
+			},
+			dot: true,
+			dotProps: {
+				stroke: "white",
+				"stroke-width": 2
+			}
+		},
+		series: {
+			serie1: {
+				color: "#7CB5EC"
+			},
+			serie2: {
+				color: "#000000"
+			},
+			serie3: {
+				color: "#90ED7D"
+			},
+			serie4: {
+				color: "#F7A35C"
+			},
+			serie5: {
+				color: "#8085E9"
+			},
 
 
-        },
-        defaultAxis: {
-            labels: true
-        },
-        features: {
-            grid: {
-                draw: [true, false],
-                props: {
-                    "stroke-dasharray": "-"
-                }
-            },
-            legend: {
-                horizontal: false,
-                width: 190,
-                height: 80,
-                x: 700,
-                y: 240,
-                dotProps: {
-                    stroke: "black",
-                    "stroke-width": 0
-                },
-                borderProps: {
-                    opacity: 0.0,
-                    "stroke-width": 0
-                }
-            }
-        }
-    };
+		},
+		defaultAxis: {
+			labels: true
+		},
+		features: {
+			grid: {
+				draw: [true, false],
+				props: {
+					"stroke-dasharray": "-"
+				}
+			},
+			legend: {
+				horizontal: false,
+				width: 190,
+				height: 80,
+				x: 700,
+				y: 240,
+				dotProps: {
+					stroke: "black",
+					"stroke-width": 0
+				},
+				borderProps: {
+					opacity: 0.0,
+					"stroke-width": 0
+				}
+			}
+		}
+	};
 
 }
 
 
 function ScreenQuery() {
-    var scr = this;
+	var scr = this;
 
-    this.baseUrl = '/storage-reader/query';
-    $.get("inc/screenquery.inc", function(content) {
-        scr.content = content;
-    });
+	this.baseUrl = '/storage-reader/query';
+	$.get("inc/screenquery.inc", function(content) {
+		scr.content = content;
+	});
 
-    this.openScreen = function() {
-        $('.content').html(this.content);
-        showScreen(true);
-        $('#sendBtn').on('click', function(event) {
-            scr.send();
-        });
-        this.selectBoxes();
-        $('.queryBox').change(this.queryBoxes);
-        $('.editBox').change(this.updateUrl);
+	this.openScreen = function() {
+		$('.content').html(this.content);
+		showScreen(true);
+		$('#sendBtn').on('click', function(event) {
+			scr.send();
+		});
+		this.selectBoxes();
+		$('.queryBox').change(this.queryBoxes);
+		$('.editBox').change(this.updateUrl);
 
-    }
+	}
 
-    this.closeScreen = function() {
-        showScreen(false);
-        $('.content').html('');
-    }
-    this.queryBoxes = function(e) {
-        scr.selectBoxes();
-    }
-    this.selectBoxes = function() {
-        $('#attributesTable').find('tr').css('display', 'none');
-        $('#startTime').css('display', 'table-row');
-        $('#endTime').css('display', 'table-row');
-        if ($('#eventType').val() == 'anomaly' || $('#eventType').val() == 'feedback') {
-            $('#queryType').val('default');
-            $('.amm').css('display', 'none');
-        } else {
-            $('.amm').css('display', 'block');
-        }
-        $('#url').val(this.baseUrl + '/' + $('#eventType').val() + '/' + $('#queryType').val())
-        if ($('#queryType').val() != 'default') {
-            $('#propertyKey').css('display', 'table-row');
-        }
-        if ($('#eventType').val() == 'simple') {
-            $('#sensorId').css('display', 'table-row');
+	this.closeScreen = function() {
+		showScreen(false);
+		$('.content').html('');
+	}
+	this.queryBoxes = function(e) {
+		scr.selectBoxes();
+	}
+	this.selectBoxes = function() {
+		$('#attributesTable').find('tr').css('display', 'none');
+		$('#startTime').css('display', 'table-row');
+		$('#endTime').css('display', 'table-row');
+		if ($('#eventType').val() == 'anomaly' || $('#eventType').val() == 'feedback') {
+			$('#queryType').val('default');
+			$('.amm').css('display', 'none');
+		} else {
+			$('.amm').css('display', 'block');
+		}
+		$('#url').val(this.baseUrl + '/' + $('#eventType').val() + '/' + $('#queryType').val())
+		if ($('#queryType').val() != 'default') {
+			$('#propertyKey').css('display', 'table-row');
+		}
+		if ($('#eventType').val() == 'simple') {
+			$('#sensorId').css('display', 'table-row');
 
-        }
-        if ($('#eventType').val() == 'derived') {
-            $('#componentId').css('display', 'table-row');
-        }
-        if ($('#eventType').val() == 'predicted') {
-            $('#eventName').css('display', 'table-row');
-        }
-        if ($('#eventType').val() == 'anomaly') {
-            $('#anomalyType').css('display', 'table-row');
-        }
-        if ($('#eventType').val() == 'recommendation') {
-            if ($('#queryType').val() == 'default') {
-                $('#actor').css('display', 'table-row');
-                $('#eventName').css('display', 'table-row');
-                $('#recommendationId').css('display', 'table-row');
-            }
-        }
-        if ($('#eventType').val() == 'feedback') {
-            $('#actor').css('display', 'table-row')
-            $('#recommendationId').css('display', 'table-row')
-        }
-        if ($('#eventType').val() == 'default') {
-            $('#actor').css('display', 'table-row');
-            $('#recommendationId').css('display', 'table-row');
-        }
-        this.updateUrl();
-    }
-    this.updateUrl = function() {
-        var attributes = $('#attributesTable').find('tr:visible');
-        var url = $('#url').val().split('?')[0] + '?';
-        for (var i = 0; i < attributes.length; i++) {
-            var attr = scr.getAttribute(attributes.eq(i));
-            if (attr != "") {
-                url = url + attributes.eq(i).attr('id') + '=' + attr;
-                url = url + '&';
-            }
-        }
-        url = url.slice(0, url.length - 1);
-        $('#url').val(url);
-    }
+		}
+		if ($('#eventType').val() == 'derived') {
+			$('#componentId').css('display', 'table-row');
+		}
+		if ($('#eventType').val() == 'predicted') {
+			$('#eventName').css('display', 'table-row');
+		}
+		if ($('#eventType').val() == 'anomaly') {
+			$('#anomalyType').css('display', 'table-row');
+		}
+		if ($('#eventType').val() == 'recommendation') {
+			if ($('#queryType').val() == 'default') {
+				$('#actor').css('display', 'table-row');
+				$('#eventName').css('display', 'table-row');
+				$('#recommendationId').css('display', 'table-row');
+			}
+		}
+		if ($('#eventType').val() == 'feedback') {
+			$('#actor').css('display', 'table-row')
+			$('#recommendationId').css('display', 'table-row')
+		}
+		if ($('#eventType').val() == 'default') {
+			$('#actor').css('display', 'table-row');
+			$('#recommendationId').css('display', 'table-row');
+		}
+		this.updateUrl();
+	}
+	this.updateUrl = function() {
+		var attributes = $('#attributesTable').find('tr:visible');
+		var url = $('#url').val().split('?')[0] + '?';
+		for (var i = 0; i < attributes.length; i++) {
+			var attr = scr.getAttribute(attributes.eq(i));
+			if (attr != "") {
+				url = url + attributes.eq(i).attr('id') + '=' + attr;
+				url = url + '&';
+			}
+		}
+		url = url.slice(0, url.length - 1);
+		$('#url').val(url);
+	}
 
-    this.getAttribute = function(el) {
-        var selector = (el.attr('id') == "sensorId" || el.attr('id') == "propertyKey") ? 'select' : 'input';
-        if (el.attr('id').indexOf('Time') > -1) {
-            var els = el.find(selector);
-            return (new Date(els.eq(0).val(), els.eq(1).val() - 1, els.eq(2).val(), els.eq(3).val(), els.eq(4).val(), els.eq(5).val())).getTime();
-        } else {
-            return el.find(selector).val();
-        }
-    }
-    this.send = function() {
-        var response = $.get($('#url').val());
-        this.postResponse(response);
+	this.getAttribute = function(el) {
+		var selector = (el.attr('id') == "sensorId" || el.attr('id') == "propertyKey") ? 'select' : 'input';
+		if (el.attr('id').indexOf('Time') > -1) {
+			var els = el.find(selector);
+			return (new Date(els.eq(0).val(), els.eq(1).val() - 1, els.eq(2).val(), els.eq(3).val(), els.eq(4).val(), els.eq(5).val())).getTime();
+		} else {
+			return el.find(selector).val();
+		}
+	}
+	this.send = function() {
+		var response = $.get($('#url').val());
+		this.postResponse(response);
 
-    }
-    this.postResponse = function(res) {
-        if (res.responseText === undefined) {
-            setTimeout(function() {
-                scr.postResponse(res)
-            }, 100);
-        } else {
-            $('#textBox').val(res.responseText);
-        }
-    }
+	}
+	this.postResponse = function(res) {
+		if (res.responseText === undefined) {
+			setTimeout(function() {
+				scr.postResponse(res)
+			}, 100);
+		} else {
+			$('#textBox').val(res.responseText);
+		}
+	}
 }
-

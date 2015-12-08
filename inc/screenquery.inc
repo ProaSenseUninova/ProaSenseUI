@@ -2,8 +2,8 @@
 	<tr style="text-align:center">
 		<td>
 			<b>
-				Query tester
-			</b>
+Query tester
+</b>
 		</td>
 	</tr>
 </table>
@@ -12,7 +12,8 @@
 <table class="queryTable">
 	<tr>
 		<td colspan="2">
-			URL:<input style="width:600px" value="/storage-reader/query" id="url" readonly type="textbox"/>
+			URL:
+			<input style="width:600px" value="/storage-reader/query" id="url" readonly type="textbox" />
 		</td>
 
 	</tr>
@@ -38,7 +39,7 @@
 				<option class="amm" value="minimum">minimum</option>
 				<option class="amm" value="maximum">maximum</option>
 			</select>
-		</td>		
+		</td>
 	</tr>
 </table>
 <table id="attributesTable" class="queryTable editBox">
@@ -52,51 +53,41 @@
 				<option value="1000696">1000696</option>
 			</select>
 		</td>
-	</tr>	
+	</tr>
 	<tr id="startTime">
 		<td>
 			Start time:
 		</td>
 		<td>
-			<input style="width:50" value="2014" placeholder="Year" type="textbox"/>
-			-
-			<input style="width:40" value="02" placeholder="Mon" type="textbox"/>
-			-
-			<input style="width:40" value="08" placeholder="Day" type="textbox"/>
-			&nbsp
-			<input style="width:40" value="07" placeholder="HH" type="textbox"/>
-			:
-			<input style="width:40" value="10" placeholder="MM" type="textbox"/>
-			:
-			<input style="width:40" value="18" placeholder="SS" type="textbox"/>
+			<input style="width:50" value="2014" placeholder="Year" type="textbox" /> -
+			<input style="width:40" value="02" placeholder="Mon" type="textbox" /> -
+			<input style="width:40" value="08" placeholder="Day" type="textbox" /> &nbsp
+			<input style="width:40" value="07" placeholder="HH" type="textbox" /> :
+			<input style="width:40" value="10" placeholder="MM" type="textbox" /> :
+			<input style="width:40" value="18" placeholder="SS" type="textbox" />
 		</td>
-	</tr>	
+	</tr>
 	<tr id="endTime">
 		<td>
 			End time
 		</td>
 		<td>
-			<input style="width:50" value="2014" placeholder="Year" type="textbox"/>
-			-
-			<input style="width:40" value="02" placeholder="Mon" type="textbox"/>
-			-
-			<input style="width:40" value="08" placeholder="Day" type="textbox"/>
-			&nbsp
-			<input style="width:40" value="07" placeholder="HH" type="textbox"/>
-			:
-			<input style="width:40" value="10" placeholder="MM" type="textbox"/>
-			:
-			<input style="width:40" value="18" placeholder="SS" type="textbox"/>
+			<input style="width:50" value="2014" placeholder="Year" type="textbox" /> -
+			<input style="width:40" value="02" placeholder="Mon" type="textbox" /> -
+			<input style="width:40" value="08" placeholder="Day" type="textbox" /> &nbsp
+			<input style="width:40" value="07" placeholder="HH" type="textbox" /> :
+			<input style="width:40" value="10" placeholder="MM" type="textbox" /> :
+			<input style="width:40" value="18" placeholder="SS" type="textbox" />
 		</td>
-	</tr>	
+	</tr>
 	<tr id="componentId">
 		<td>
 			Component id
 		</td>
 		<td>
-			<input type="textbox"/>
+			<input type="textbox" />
 		</td>
-	</tr>	
+	</tr>
 	<tr id="propertyKey">
 		<td>
 			Property key
@@ -106,47 +97,47 @@
 				<option value="value">value</option>
 			</select>
 		</td>
-	</tr>	
+	</tr>
 	<tr id="eventName">
 		<td>
 			Event name
 		</td>
 		<td>
-			<input type="textbox"/>
+			<input type="textbox" />
 		</td>
-	</tr>	
+	</tr>
 	<tr id="anomalyType">
 		<td>
 			Anomaly type
 		</td>
 		<td>
-			<input type="textbox"/>
+			<input type="textbox" />
 		</td>
-	</tr>	
+	</tr>
 	<tr id="recommendationId">
 		<td>
 			Recommendation id
 		</td>
 		<td>
-			<input type="textbox"/>
+			<input type="textbox" />
 		</td>
-	</tr>	
+	</tr>
 	<tr id="actor">
 		<td>
 			Actor
 		</td>
 		<td>
-			<input type="textbox"/>
+			<input type="textbox" />
 		</td>
-	</tr>	
+	</tr>
 	<tr id="status">
 		<td>
 			Status
 		</td>
 		<td>
-			<input type="textbox"/>
+			<input type="textbox" />
 		</td>
-	</tr>	
+	</tr>
 </table>
 <table class="queryTable">
 	<tr>
