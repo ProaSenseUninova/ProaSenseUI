@@ -889,8 +889,10 @@ function ScreenGraph(kpiInfo) {
             }
         }
         var graphContextualInformation = $('#graphTable').find('input:checked').val();
-        var graphStartTime = (new Date()).getTime() - 1000*24*3600*365; //1 Year ago
-        var graphEndTime = (new Date()).getTime() 
+        
+        var graphStartTime = (new Date(2014,11,31)).getTime();
+
+		var graphEndTime = (new Date(2015,4,31)).getTime();
         var graphGranularity = $('#granularityChart').val();
         $('#graphButton').on('click', function(event) {
             scr.updateGraph();
@@ -941,13 +943,10 @@ function ScreenGraph(kpiInfo) {
 			},
 		});
 
-        var secondDate = new Date();
-        secondDate.setHours(0);
-        secondDate.setMinutes(0);
-        secondDate.setSeconds(0);
-        secondDate.setMilliseconds(0);
-        
-        var firstDate = new Date(secondDate -1000*24*3600*365);
+   		var firstDate = new Date(2014,11,31);
+
+		var secondDate = new Date(2015,4,31);
+		
         $('#fromDateChart').appendDtpicker({
                 "dateOnly": true,
                 "onShow": function(handler) {},
