@@ -215,7 +215,7 @@
 	<tr>
 		<td>
 			<form id="contextualInformation">
-				<input type="checkbox" value="context_product">Product type
+				<input type="checkbox" value="context_product">Product
 				<br>
 				<input type="checkbox" value="context_machine">Machine
 				<br>
