@@ -1,4 +1,4 @@
-unction openKPI() {
+function openKPI() {
     scrQuery.closeScreen();
     $('.headerSelector').find('a').eq(0).attr('class', 'selected');
     $('.headerSelector').find('a').eq(1).attr('class', 'notSelected');
