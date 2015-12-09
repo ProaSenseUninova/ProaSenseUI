@@ -521,6 +521,7 @@ function Screen2(kpiInfo) {
 			if (this.kpiInfo[i].id == elId) {
 				this.changeLoadedKpi(elId);
 				el = this.kpiInfo[i];
+				var titleRow = '<tr bgcolor="#cccccc">'
 				var firstRow = '<tr bgcolor="#cccccc">'
 				var listRow = '';
 				var listCol1 = '';
@@ -540,18 +541,14 @@ function Screen2(kpiInfo) {
 							options = options + '<option value=' + tmpVect[k].id + '>' + tmpVect[k].name + '</option>';
 						}
 						listRow = listRow + '<tr><td width="300px">' + chk.name + '</td><td><select data-value="' + chk.value + '">' + options + '</select></td></tr>';
-
 					}
-
-
 				}
 				options = '';
-				for (var j = 0; j < this.kpiInfo.length; j++) {
-					options = options + '<option value=' + this.kpiInfo[j].id + '>' + this.kpiInfo[j].name + '</option>';
-				}
-				listRow = listRow + '<tr><td width="150px">KPI Target</td><td><select id="kpiList" data-value="id">' + options + '</select></td></tr>';
+				
 				$('#targetList').append(listRow);
-				firstRow = firstRow + '<td>Lower bound</td><td>Upper bound</td><td colspan=2>KPI Target</td><tr>';
+				titleRow=titleRow+'<td colspan=7 style="text-align:center"><b>'+el.name+'</b></td>'
+				firstRow = firstRow + '<td>Lower bound</td><td colspan=2>Upper bound</td></tr>';
+				$('#targetTable').append(titleRow);
 				$('#targetTable').append(firstRow);
 				var toAppend = '';
 
@@ -573,7 +570,8 @@ function Screen2(kpiInfo) {
 						}
 					}
 					toAppend = toAppend + '<td>' + kpiTargets[j].lower_bound + '</td><td>' + kpiTargets[j].upper_bound + '</td>';
-					toAppend = toAppend + '<td>' + getKpi(kpiTargets[j].kpi_id).name + '</td><td width="25px" data-id=' + kpiTargets[j].id + ' style="cursor:pointer" align="center" title="Delete element" ><span class="glyphicon glyphicon-minus" style="color:#333333" aria-hidden="true"></span></td></tr>';
+					toAppend = toAppend + '<td width="25px" data-id=' + kpiTargets[j].id + ' style="cursor:pointer" align="center" title="Delete element" ><span class="glyphicon glyphicon-minus" style="color:#333333" aria-hidden="true"></span></td></tr>';
+					console.log(toAppend);
 					$('#targetTable').append(toAppend);
 					var scr = this;
 					$('#targetTable').find('tr:last').find('td:last').click(function(e) {
@@ -599,6 +597,7 @@ function Screen2(kpiInfo) {
 			$('html').block({
 				'message': null
 			});
+			console.log(query);
 			$.ajax({
 				url: restAddress + 'proasense_hella/kpi_target',
 				type: 'POST',
@@ -623,12 +622,11 @@ function Screen2(kpiInfo) {
 						var upperBoundBox = $('#upperBoundBox').val()
 						var lowerBoundBox = $('#lowerBoundBox').val()
 
-						for (var j = 0; j < rows.length - 1; j++) {
+						for (var j = 0; j < rows.length ; j++) {
 							toAppend = toAppend + '<td>' + rows.eq(j).find('select option:selected').text() + '</td>';
 						}
-
-						toAppend = toAppend + '<td>' + (lowerBoundBox == '' ? 0 : lowerBoundBox) + '</td><td>' + (upperBoundBox == '' ? 0 : upperBoundBox) + '</td>';
-						toAppend = toAppend + '<td>' + $('select:last').find('option:selected').text() + '</td><td width="25px" data-id=' + newTgId + ' style="cursor:pointer" align="center" title="Delete element" ><span class="glyphicon glyphicon-minus" style="color:#333333" aria-hidden="true"></span></td></tr>';
+						toAppend = toAppend + '<td>'+ (lowerBoundBox == '' ? 0 : lowerBoundBox) + '</td><td>' + (upperBoundBox == '' ? 0 : upperBoundBox) +  '</td><td width="25px" data-id=' + newTgId + ' style="cursor:pointer" align="center" title="Delete element" ><span class="glyphicon glyphicon-minus" style="color:#333333" aria-hidden="true"></span></td></tr>';
+						console.log(toAppend);
 						$('#targetTable').append(toAppend);
 
 
