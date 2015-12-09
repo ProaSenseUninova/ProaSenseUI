@@ -719,12 +719,6 @@ function ScreenGraph(kpiInfo) {
 		scr.content = content;
 	});
 
-	this.toPercentage = function() {
-		var yLabels = $('#chart').find('text[opacity=1]');
-		for (var i = 0; i < yLabels.length; i++) {
-			yLabels.eq(i).text(yLabels.eq(i).text() * 100 + "%");
-		}
-	}
 	this.getRandomColor = function() {
 		var letters = '0123456789ABCDEF'.split('');
 		var color = '#';
@@ -1284,9 +1278,10 @@ function ScreenGraph(kpiInfo) {
 				$("#chart").chart({
 					template: "line_basic_1",
 					tooltips: function(serieId, valueIndex, allValues, singleValue) {
-						var value = loadedKpi == "4" ? 'Value: ' + (singleValue * 100).toFixed(2) + "%" : 'Value: ' + singleValue
+						var value = loadedKpi == "4" ? 'Value: ' + (singleValue * 100).toFixed(2) + "%" : 'Value: ' + singleValue.toFixed(2);
 						return value
 					},
+					percentage:loadedKpi==4?true:false,
 					legend: graphData.legend,
 					labels: graphData.labels,
 					values: scr.graphSeriesValues(graphData.data),
@@ -1333,9 +1328,6 @@ function ScreenGraph(kpiInfo) {
 			if ($('#graphTable').width() != $('#page-content-wrapper').width()) {
 				this.adjustGraph();
 			}
-		}
-		if (loadedKpi == "4") {
-			this.toPercentage();
 		}
 	};
 
