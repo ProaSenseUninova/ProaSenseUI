@@ -1231,10 +1231,13 @@ function ScreenGraph(kpiInfo) {
 				features: {
 					mousearea: {
 						onMouseClick: function(a, b, c, d) {
-							var serieIndex = b.substring(5, b.length) - 1;
-							var labelIndex = Math.round((c / (scr.graphData.data[serieIndex].length - 1) * (scr.graphData.labels.length - 1)));
-							console.log(scr.graphData.legend[serieIndex]);
-							console.log(scr.graphData.labels[labelIndex]);
+							if(b.startsWith('serie'))
+							{
+								var serieIndex = b.substring(5, b.length) - 1;
+								var labelIndex = Math.round((c / (scr.graphData.data[serieIndex].length - 1) * (scr.graphData.labels.length - 1)));
+								console.log(scr.graphData.legend[serieIndex]);
+								console.log(scr.graphData.labels[labelIndex]);
+							}
 						},
 					},
 					grid: {
