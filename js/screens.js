@@ -1268,6 +1268,15 @@ function ScreenGraph(kpiInfo) {
 					};
 				}
 				$.elycharts.templates["line_basic_1"].features.legend.x = $('#chart').width() - 100;
+				var limits=[];
+				for(var i=0;i<kpiTargets.length;i++)
+				{
+					if(loadedKpi==kpiTargets[i].kpi_id)
+					{
+						limits.push(kpiTargets[i].lower_bound);
+						limits.push(kpiTargets[i].upper_bound);
+					}
+				}
 				$("#chart").chart("clear");
 				$("#chart").chart({
 					template: "line_basic_1",
@@ -1278,6 +1287,7 @@ function ScreenGraph(kpiInfo) {
 					legend: graphData.legend,
 					labels: graphData.labels,
 					values: scr.graphSeriesValues(graphData.data),
+					limits:limits,
 					defaultSeries: {
 						tooltip: {
 							width: 90,
