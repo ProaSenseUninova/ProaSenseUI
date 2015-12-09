@@ -531,7 +531,7 @@ function Screen2(kpiInfo) {
 				var options = '';
 				for (var j = 0; j < $('#contextualInformation input').length; j++) {
 					var chk = $('#contextualInformation input')[j];
-					options = '<option value=null>No '+chk.name+'</option>';
+					options = '<option value=null>All '+chk.name+'</option>';
 					chk.checked = el[contexts[j]];
 					if (chk.checked) {
 						firstRow = firstRow + '<td>' + chk.name + '</td>';
@@ -565,7 +565,7 @@ function Screen2(kpiInfo) {
 					{
 						if(kpiTargets[j][chk[k].value]==null)
 						{
-							toAppend = toAppend + '<td>No '+ chk[k].name.split(' ')[0]+'</td>';
+							toAppend = toAppend + '<td>All '+ chk[k].name.split(' ')[0]+'</td>';
 						}
 						else
 						{
