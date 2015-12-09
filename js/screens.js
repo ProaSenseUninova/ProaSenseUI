@@ -740,11 +740,11 @@ function ScreenGraph(kpiInfo) {
 			if (chart.chart('config') !== false) {
 				chart.chart();
 				chart.find('svg').attr('width', 400);
-				chart.chart('config').features.legend.x = $('#chart').width() - 100;
+				chart.chart('config').features.legend.x = chart.width() - 100;
 				chart.chart();
 				var series = $.elycharts.templates['line_basic_1'].series;
 				var len = this.graphData.data.length;
-				var objs = $('#chart').find('[fill="none"]');
+				var objs = chart.find('[fill="none"]');
 				for (var i = 0; i < len; i++) {
 					var color = series['serie' + (i + 1)].color;
 					objs.eq(i + objs.length - len).attr('fill', color);
