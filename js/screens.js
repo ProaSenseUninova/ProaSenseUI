@@ -530,8 +530,8 @@ function Screen2(kpiInfo) {
 
 				var options = '';
 				for (var j = 0; j < $('#contextualInformation input').length; j++) {
-					options = '';
 					var chk = $('#contextualInformation input')[j];
+					options = '<option value=null>No '+chk.name+'</option>';
 					chk.checked = el[contexts[j]];
 					if (chk.checked) {
 						firstRow = firstRow + '<td>' + chk.name + '</td>';
@@ -561,10 +561,16 @@ function Screen2(kpiInfo) {
 					}
 					toAppend = '<tr id=' + kpiTargets[j].id + '>';
 					var chk = $('#contextualInformation input:checked');
-					for (var k = 0; k < chk.length; k++) {
-
-
-						toAppend = toAppend + '<td>' + eval('get' + chk[k].name.split(' ')[0] + '(' + kpiTargets[j][chk[k].value] + ').name'); + '</td>';
+					for (var k = 0; k < chk.length; k++) 
+					{
+						if(kpiTargets[j][chk[k].value]==null)
+						{
+							toAppend = toAppend + '<td>No '+ chk[k].name.split(' ')[0]+'</td>';
+						}
+						else
+						{
+							toAppend = toAppend + '<td>' + eval('get' + chk[k].name.split(' ')[0] + '(' + kpiTargets[j][chk[k].value] + ').name'); + '</td>';
+						}
 					}
 					toAppend = toAppend + '<td>' + kpiTargets[j].lower_bound + '</td><td>' + kpiTargets[j].upper_bound + '</td>';
 					toAppend = toAppend + '<td>' + getKpi(kpiTargets[j].kpi_id).name + '</td><td width="25px" data-id=' + kpiTargets[j].id + ' style="cursor:pointer" align="center" title="Delete element" ><span class="glyphicon glyphicon-minus" style="color:#333333" aria-hidden="true"></span></td></tr>';
