@@ -571,7 +571,6 @@ function Screen2(kpiInfo) {
 					}
 					toAppend = toAppend + '<td>' + kpiTargets[j].lower_bound + '</td><td>' + kpiTargets[j].upper_bound + '</td>';
 					toAppend = toAppend + '<td width="25px" data-id=' + kpiTargets[j].id + ' style="cursor:pointer" align="center" title="Delete element" ><span class="glyphicon glyphicon-minus" style="color:#333333" aria-hidden="true"></span></td></tr>';
-					console.log(toAppend);
 					$('#targetTable').append(toAppend);
 					var scr = this;
 					$('#targetTable').find('tr:last').find('td:last').click(function(e) {
@@ -597,7 +596,6 @@ function Screen2(kpiInfo) {
 			$('html').block({
 				'message': null
 			});
-			console.log(query);
 			$.ajax({
 				url: restAddress + 'proasense_hella/kpi_target',
 				type: 'POST',
@@ -626,7 +624,6 @@ function Screen2(kpiInfo) {
 							toAppend = toAppend + '<td>' + rows.eq(j).find('select option:selected').text() + '</td>';
 						}
 						toAppend = toAppend + '<td>'+ (lowerBoundBox == '' ? 0 : lowerBoundBox) + '</td><td>' + (upperBoundBox == '' ? 0 : upperBoundBox) +  '</td><td width="25px" data-id=' + newTgId + ' style="cursor:pointer" align="center" title="Delete element" ><span class="glyphicon glyphicon-minus" style="color:#333333" aria-hidden="true"></span></td></tr>';
-						console.log(toAppend);
 						$('#targetTable').append(toAppend);
 
 
@@ -979,7 +976,6 @@ function ScreenGraph(kpiInfo) {
 		var graphSeries = {};
 
 		if (typeof(seriesData) == "object") {
-			console.log("Received values as objects. Each a set of numbers (aka serie).");
 			for (var i = 0; i < seriesData.length; i++) {
 				graphSeries["serie" + (i + 1)] = seriesData[i];
 			}
@@ -1172,7 +1168,6 @@ function ScreenGraph(kpiInfo) {
 	}
 
 	this.initializeGraph = function(graphData) {
-		console.log(graphData);
 		this.graphData = graphData;
 		if (graphData.data != null) {
 			// KPI Chart
