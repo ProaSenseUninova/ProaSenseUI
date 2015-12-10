@@ -119,11 +119,11 @@
 }
 
 #chart circle{
-	cursor: hand;
+	cursor: pointer;
 }
 /*
 #heatMap rect{
-	cursor: hand;
+	cursor: pointer;
 }
 */
 .chartTable{
