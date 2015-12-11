@@ -1273,7 +1273,7 @@ function ScreenGraph(kpiInfo) {
 				$("#chart").chart({
 					template: "line_basic_1",
 					tooltips: function(serieId, valueIndex, allValues, singleValue) {
-						var value = loadedKpi == "4" ? 'Value: ' + (singleValue * 100).toFixed(2) + "%" : 'Value: ' + singleValue.toFixed(2);
+						var value = loadedKpi == "4" ? 'Value: ' + parseFloat((singleValue * 100).toFixed(2)) + "%" : 'Value: ' + parseFloat(singleValue.toFixed(3));
 						return value
 					},
 					percentage:loadedKpi==4?true:false,
