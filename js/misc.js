@@ -1,10 +1,16 @@
 var socketIOAddress = 'http://gris-groupware.uninova.pt'
 var restAddress = 'data/';
 
-//For IE
+//For IE and Android
 String.prototype.endsWith = function(suffix) {
 	return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
+
+//For IE and  Android
+String.prototype.startsWith = function(suffix) {
+	return this.indexOf(suffix) === 0;
+};
+
 
 $(function() {
 	if ($(window).width() >= 800) {
