@@ -756,9 +756,12 @@ function ScreenGraph(kpiInfo) {
 
 	});
 
+	this.startYear=null;
+
 	this.updateGraph = function() {
 		var graphContextualInformation = $('#graphTable').find('input:checked').val();
 		var graphStartTime = $('#fromDateChart').handleDtpicker('getDate').getTime();
+		this.startYear=(new Date(graphStartTime)).getFullYear();
 		var graphEndTime = $('#toDateChart').handleDtpicker('getDate').getTime();
 		var graphGranularity = $('#granularityChart').val();
 		//scr.initializeGraph(this.testGraphData);
@@ -770,7 +773,7 @@ function ScreenGraph(kpiInfo) {
 			},
 		});
 	}
-	this.updateHeatMap = function() {
+	this.updateHeatMap = function(startDate,endDate) {
 		var heatMapContextualInformation = '[';
 		var inputs = $('#heatMapTable').find('input:checked');
 		for (var i = 0; i < inputs.length; i++) {
@@ -780,8 +783,8 @@ function ScreenGraph(kpiInfo) {
 			}
 		}
 		heatMapContextualInformation = heatMapContextualInformation + ']';
-		var heatMapStartTime = $('#fromDateHeatMap').handleDtpicker('getDate').getTime();
-		var heatMapEndTime = $('#toDateHeatMap').handleDtpicker('getDate').getTime();
+		var heatMapStartTime = startDate!==undefined?startDate:$('#fromDateHeatMap').handleDtpicker('getDate').getTime();
+		var heatMapEndTime = endDate!==undefined?endDate:$('#toDateHeatMap').handleDtpicker('getDate').getTime();
 		var heatMapGranularity = $('#granularityHeatMap').val()
 		$.ajax({
 			url: restAddress + "func/getHeatMapData?kpiId=" + loadedKpi + "&contextualInformation=" + heatMapContextualInformation + "&startTime=" + heatMapStartTime + "&endTime=" + heatMapEndTime + "&granularity=" + heatMapGranularity,
@@ -879,7 +882,7 @@ function ScreenGraph(kpiInfo) {
 		var graphContextualInformation = $('#graphTable').find('input:checked').val();
 
 		var graphStartTime = (new Date(2014, 11, 31)).getTime();
-
+		this.startYear=(new Date(graphStartTime)).getFullYear();
 		var graphEndTime = (new Date(2015, 4, 31)).getTime();
 		var graphGranularity = $('#granularityChart').val();
 		$('#graphButton').on('click', function(event) {
@@ -1223,9 +1226,39 @@ function ScreenGraph(kpiInfo) {
 							if(b.startsWith('serie'))
 							{
 								var serieIndex = b.substring(5, b.length) - 1;
-								var labelIndex = Math.round((c / (scr.graphData.data[serieIndex].length - 1) * (scr.graphData.labels.length - 1)));
-								console.log(scr.graphData.legend[serieIndex]);
-								console.log(scr.graphData.labels[labelIndex]);
+								var labelIndex = scr.graphData.labels.length  >1?Math.round((c / (scr.graphData.data[serieIndex].length - 1) * (scr.graphData.labels.length - 1))):0;
+								var legend=scr.graphData.legend[serieIndex];
+								var label = scr.graphData.labels[labelIndex]
+								var startDate=null;
+								var endDate;
+								if(!isNaN(label.substring(0,2)))
+								{
+									if(label[2]=="h")
+									{
+										startDate=new Date(label.replace("h",":00:00")+" "+scr.startYear);
+										endDate = new Date(startDate.getTime()+1000*3600);
+									}
+									else
+									{
+										startDate=new Date(label);
+										endDate = new Date(startDate.getTime()+1000*3600*24);
+									}
+								}
+								else
+								{
+									if(label[0]=="W")
+									{
+										startDate=getDateOfWeek(label.substring(1,3),"20"+label.split("'")[1]);
+										endDate = new Date(startDate.getTime()+1000*3600*24*7);
+									}
+									else
+									{
+										startDate=new Date("1"+label);
+										endDate = new Date("1"+label);
+										endDate.setMonth(endDate.getMonth()+1);
+									}
+								}
+								scr.updateHeatMap(startDate.getTime(),endDate.getTime());
 							}
 						},
 					},
