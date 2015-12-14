@@ -1213,6 +1213,18 @@ function ScreenGraph(kpiInfo) {
 					serie8: {
 						color: "#9900CC"
 					},
+					serie9: {
+						color: "#F5007B"
+					},
+					serie10: {
+						color: "#0000EB"
+					},
+					serie11: {
+						color: "#EBEB00"
+					},
+					serie12: {
+						color: "#A0A0A0"
+					},					
 
 
 				},
@@ -1286,8 +1298,9 @@ function ScreenGraph(kpiInfo) {
 				}
 			};
 			$(function() {
-				Math.seed = 0;
-				for (i = 9; i <= len; i++) {
+				Math.seed = 50;
+				var initialPos= Object.keys($.elycharts.templates["line_basic_1"].series).length+1;
+				for (i = initialPos; i <= len; i++) {
 					$.elycharts.templates["line_basic_1"].series['serie' + i] = {
 						'color': scr.getRandomColor()
 					};
