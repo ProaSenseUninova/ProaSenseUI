@@ -1319,8 +1319,18 @@ function ScreenGraph(kpiInfo) {
 				$("#chart").chart({
 					template: "line_basic_1",
 					tooltips: function(serieId, valueIndex, allValues, singleValue) {
-						var value = loadedKpi == "4" ? 'Value: ' + parseFloat((singleValue * 100).toFixed(2)) + "%" : 'Value: ' + parseFloat(singleValue.toFixed(3));
-						return value
+						var legend="";
+						
+						if(valueIndex.startsWith("serie"))
+						{
+							legend=this.legend[valueIndex.substring(5,valueIndex.length)-1]+"<br>";
+						}
+						else
+						{
+							legend="Limit<br>";
+						}
+						var value = legend+  (loadedKpi == "4" ? 'Value: ' + parseFloat((singleValue * 100).toFixed(2)) + "%" : 'Value: ' + parseFloat(singleValue.toFixed(3)));
+						return value;
 					},
 					percentage:loadedKpi==4?true:false,
 					legend: graphData.legend,
@@ -1329,8 +1339,8 @@ function ScreenGraph(kpiInfo) {
 					limits:limits,
 					defaultSeries: {
 						tooltip: {
-							width: 90,
-							height: 25,
+							width: 100,
+							height: 40,
 							contentStyle: {
 								"text-align": "center"
 							}
