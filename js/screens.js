@@ -1243,6 +1243,8 @@ function ScreenGraph(kpiInfo) {
 								var label = scr.graphData.labels[labelIndex]
 								var startDate=null;
 								var endDate;
+								console.log(scr.graphData.labels);
+								console.log(label);
 								if(!isNaN(label.substring(0,2)))
 								{
 									if(label[2]=="h")
