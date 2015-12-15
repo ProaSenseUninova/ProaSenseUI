@@ -30,19 +30,19 @@
 				<br>
 			</td>
 			<td data-cInfo="context_product">
-				<input type="radio" name="type" value="Product"> Product
+				<input type="radio" name="type" value="product"> Product
 				<br>
 			</td>
 			<td data-cInfo="context_machine">
-				<input type="radio" name="type" value="Machine"> Machine
+				<input type="radio" name="type" value="machine"> Machine
 				<br>
 			</td>
 			<td data-cInfo="context_shift">
-				<input type="radio" name="type" value="Shift"> Shift
+				<input type="radio" name="type" value="shift"> Shift
 				<br>
 			</td>
 			<td data-cInfo="context_mould">
-				<input type="radio" name="type" value="Mould"> Mould
+				<input type="radio" name="type" value="mould"> Mould
 				<br>
 			</td>
 		</form>
@@ -88,19 +88,19 @@
 	<tr>
 		<form id="heatMapSelector" action="">
 			<td data-cInfo="context_product">
-				<input value="product" type="CheckBox"> Product
+				<input value="product" name="type2" type="radio"> Product
 				<br>
 			</td>
 			<td data-cInfo="context_machine">
-				<input value="machine" type="CheckBox"> Machine
+				<input value="machine" name="type2" type="radio"> Machine
 				<br>
 			</td>
 			<td data-cInfo="context_shift">
-				<input value="shift" type="CheckBox"> Shift
+				<input value="shift" name="type2" type="radio"> Shift
 				<br>
 			</td>
 			<td data-cInfo="context_mould">
-				<input value="mould" type="CheckBox"> Mould
+				<input value="mould" name="type2" type="radio"> Mould
 				<br>
 			</td>
 		</form>

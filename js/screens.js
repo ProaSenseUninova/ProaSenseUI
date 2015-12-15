@@ -758,15 +758,17 @@ function ScreenGraph(kpiInfo) {
 
 	this.startYear=null;
 
+	this.graphContextualInformation="Global";
+
 	this.updateGraph = function() {
-		var graphContextualInformation = $('#graphTable').find('input:checked').val();
+		this.graphContextualInformation = $('#graphTable').find('input:checked').val();
 		var graphStartTime = $('#fromDateChart').handleDtpicker('getDate').getTime();
 		this.startYear=(new Date(graphStartTime)).getFullYear();
 		var graphEndTime = $('#toDateChart').handleDtpicker('getDate').getTime();
 		var graphGranularity = $('#granularityChart').val();
 		//scr.initializeGraph(this.testGraphData);
 		$.ajax({
-			url: restAddress + "func/getGraphData?kpiId=" + loadedKpi + "&contextualInformation=" + graphContextualInformation + "&startTime=" + graphStartTime + "&endTime=" + graphEndTime + "&granularity=" + graphGranularity,
+			url: restAddress + "func/getGraphData?kpiId=" + loadedKpi + "&contextualInformation=" + this.graphContextualInformation + "&startTime=" + graphStartTime + "&endTime=" + graphEndTime + "&granularity=" + graphGranularity,
 			type: "GET",
 			success: function(graphData) {
 				scr.initializeGraph(graphData);
@@ -774,15 +776,8 @@ function ScreenGraph(kpiInfo) {
 		});
 	}
 	this.updateHeatMap = function(startDate,endDate) {
-		var heatMapContextualInformation = '[';
-		var inputs = $('#heatMapTable').find('input:checked');
-		for (var i = 0; i < inputs.length; i++) {
-			heatMapContextualInformation = heatMapContextualInformation + inputs.eq(i).val();
-			if (i < inputs.length - 1) {
-				heatMapContextualInformation = heatMapContextualInformation + ',';
-			}
-		}
-		heatMapContextualInformation = heatMapContextualInformation + ']';
+		var graphRadioValue = $('#heatMapTable').find('input:checked').val();
+		var heatMapContextualInformation ='['+graphRadioValue+','+this.graphContextualInformation+']';
 		var heatMapStartTime = startDate!==undefined?startDate:$('#fromDateHeatMap').handleDtpicker('getDate').getTime();
 		var heatMapEndTime = endDate!==undefined?endDate:$('#toDateHeatMap').handleDtpicker('getDate').getTime();
 		var heatMapGranularity = $('#granularityHeatMap').val()
@@ -864,19 +859,28 @@ function ScreenGraph(kpiInfo) {
 
 	this.openScreen = function(id) {
 		$('.content').html(this.content);
-		var radios = $('#graphTable').find('td').slice(1, 5);
-		var checkBoxes = $('#heatMapTable').find('td').slice(0, 4);
+		this.graphContextualInformation="Global";
+		var radiosGraph = $('#graphTable').find('td').slice(1, 5);
+		var radiosHeatMap = $('#heatMapTable').find('td').slice(0, 4);
 		if (arguments.length > 0) {
 			for (var i = 0; i < this.kpiInfo.length; i++) {
 				if (this.kpiInfo[i].id == id) {
 					var element = this.kpiInfo[i];
 					for (var j = 0; j < 4; j++) {
-						var contains = element[radios.eq(j).attr('data-cInfo')];
-						radios.eq(j).attr('hidden', !contains);
-						checkBoxes.eq(j).attr('hidden', !contains);
+						var contains = element[radiosGraph.eq(j).attr('data-cInfo')];
+						radiosGraph.eq(j).attr('hidden', !contains);
+						radiosHeatMap.eq(j).attr('hidden', !contains);
 					}
 					break;
 				}
+			}
+		}
+		for(var i=0;i<radiosHeatMap.length;i++)
+		{
+			if(radiosHeatMap.eq(i).attr('hidden')===undefined)
+			{
+				radiosHeatMap.eq(i).find('input').attr('checked',true);
+				break;
 			}
 		}
 		var graphContextualInformation = $('#graphTable').find('input:checked').val();
@@ -899,7 +903,8 @@ function ScreenGraph(kpiInfo) {
 				scr.initializeGraph(graphData);
 			},
 		});
-		var heatMapContextualInformation = '[]'
+		var graphRadioValue = $('#heatMapTable').find('input:checked').val();
+		var heatMapContextualInformation ='['+graphRadioValue+','+this.graphContextualInformation+']';
 		var heatMapStartTime = (new Date()).getTime() - 3 * 30 * 24 * 60 * 60 * 1000; //3 Months ago
 		var heatMapEndTime = (new Date()).getTime()
 		var heatMapGranularity = $('#granularityHeatMap').val()
