@@ -86,24 +86,25 @@
 <div align="left">Contextual Information</div>
 <table id="heatMapTable" class="containerColor chartTable" width="100%">
 	<tr>
-		<form id="heatMapSelector" action="">
-			<td data-cInfo="context_product">
-				<input value="product" name="type2" type="radio"> Product
-				<br>
-			</td>
-			<td data-cInfo="context_machine">
-				<input value="machine" name="type2" type="radio"> Machine
-				<br>
-			</td>
-			<td data-cInfo="context_shift">
-				<input value="shift" name="type2" type="radio"> Shift
-				<br>
-			</td>
-			<td data-cInfo="context_mould">
-				<input value="mould" name="type2" type="radio"> Mould
-				<br>
-			</td>
-		</form>
+		<td width="25%">&nbsp;</td>
+		<td  width="25%" style="text-align:center">
+			<b>Vertical set:&emsp;</b>
+			<select id="verticalSet"> 
+				<option value="product">Product</option>
+				<option value="machine">Machine</option>
+				<option selected value="shift">Shift</option>
+				<option value="mould">Mould</option>
+			</select>
+		</td>
+		<td  width="25%" style="text-align:center">
+			<b>Horizontal set:&emsp;</b>
+			<select id="horizontalSet"> 
+				<option value="product">Product</option>
+				<option selected value="machine">Machine</option>
+				<option value="shift">Shift</option>
+				<option value="mould">Mould</option>
+			</select>
+		</td>&nbsp;<td>
 	</tr>
 	<tr>
 		<td rowspan=2 colspan=4 align="center">

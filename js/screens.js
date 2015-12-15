@@ -760,8 +760,11 @@ function ScreenGraph(kpiInfo) {
 
 	this.graphContextualInformation="Global";
 
+	this.graphGranularity = "monthly"
+
 	this.updateGraph = function() {
 		this.graphContextualInformation = $('#graphTable').find('input:checked').val();
+		this.graphGranularity=$('#granularityChart').val();
 		var graphStartTime = $('#fromDateChart').handleDtpicker('getDate').getTime();
 		this.startYear=(new Date(graphStartTime)).getFullYear();
 		var graphEndTime = $('#toDateChart').handleDtpicker('getDate').getTime();
@@ -775,14 +778,16 @@ function ScreenGraph(kpiInfo) {
 			},
 		});
 	}
-	this.updateHeatMap = function(startDate,endDate) {
+	this.updateHeatMap = function(startDate,endDate,legend) {
 		var graphRadioValue = $('#heatMapTable').find('input:checked').val();
-		var heatMapContextualInformation ='['+graphRadioValue+','+this.graphContextualInformation+']';
+		var horizontalSet = $('#horizontalSet').val();
+		var verticalSet = $('#verticalSet').val();
 		var heatMapStartTime = startDate!==undefined?startDate:$('#fromDateHeatMap').handleDtpicker('getDate').getTime();
 		var heatMapEndTime = endDate!==undefined?endDate:$('#toDateHeatMap').handleDtpicker('getDate').getTime();
-		var heatMapGranularity = $('#granularityHeatMap').val()
+		var elementName = legend!==undefined?legend:'Global';
+		var heatMapGranularity = legend!==undefined?$('#granularityChart').val():$('#granularityHeatMap').val()
 		$.ajax({
-			url: restAddress + "func/getHeatMapData?kpiId=" + loadedKpi + "&contextualInformation=" + heatMapContextualInformation + "&startTime=" + heatMapStartTime + "&endTime=" + heatMapEndTime + "&granularity=" + heatMapGranularity,
+			url: restAddress + "func/getHeatMapData?kpiId=" + loadedKpi + "&varX="+horizontalSet+"&varY="+verticalSet+ "&startTime=" + heatMapStartTime + "&endTime=" + heatMapEndTime + "&granularity=" + heatMapGranularity+"&contextName="+scr.graphContextualInformation+"&elementName="+elementName,
 			type: "GET",
 			success: function(heatMapData) {
 				scr.initializeHeatMap(heatMapData)
@@ -860,8 +865,10 @@ function ScreenGraph(kpiInfo) {
 	this.openScreen = function(id) {
 		$('.content').html(this.content);
 		this.graphContextualInformation="Global";
+		this.graphGranularity = "monthly";
 		var radiosGraph = $('#graphTable').find('td').slice(1, 5);
-		var radiosHeatMap = $('#heatMapTable').find('td').slice(0, 4);
+		var verticalSet = $('#verticalSet');
+		var horizontalSet = $('#horizontalSet');
 		if (arguments.length > 0) {
 			for (var i = 0; i < this.kpiInfo.length; i++) {
 				if (this.kpiInfo[i].id == id) {
@@ -869,20 +876,40 @@ function ScreenGraph(kpiInfo) {
 					for (var j = 0; j < 4; j++) {
 						var contains = element[radiosGraph.eq(j).attr('data-cInfo')];
 						radiosGraph.eq(j).attr('hidden', !contains);
-						radiosHeatMap.eq(j).attr('hidden', !contains);
+						verticalSet.find('option').eq(j).attr('hidden', !contains);
+						horizontalSet.find('option').eq(j).attr('hidden', !contains);
+					}
+					if(verticalSet.find('option').eq(2).attr('hidden'))
+					{
+						var tmpObj=verticalSet.find('option[hidden!=hidden]');
+						if(tmpObj.length>0)
+						{
+							tmpObj.eq(0).attr('selected',true);
+						}
+						else
+						{
+							verticalSet.val(null);
+						}
+					}
+					if(horizontalSet.find('option').eq(1).attr('hidden'))
+					{
+						var tmpObj=horizontalSet.find('option[hidden!=hidden]');
+						if(tmpObj.length>0)
+						{
+							tmpObj.eq(0).attr('selected',true);
+						}
+						else
+						{
+							horizontalSet.val(null);
+						}
 					}
 					break;
 				}
 			}
 		}
-		for(var i=0;i<radiosHeatMap.length;i++)
-		{
-			if(radiosHeatMap.eq(i).attr('hidden')===undefined)
-			{
-				radiosHeatMap.eq(i).find('input').attr('checked',true);
-				break;
-			}
-		}
+		
+
+		
 		var graphContextualInformation = $('#graphTable').find('input:checked').val();
 
 		var graphStartTime = (new Date(2014, 11, 31)).getTime();
@@ -904,12 +931,13 @@ function ScreenGraph(kpiInfo) {
 			},
 		});
 		var graphRadioValue = $('#heatMapTable').find('input:checked').val();
-		var heatMapContextualInformation ='['+graphRadioValue+','+this.graphContextualInformation+']';
+		var horizontalSet = $('#horizontalSet').val();
+		var verticalSet = $('#verticalSet').val();
 		var heatMapStartTime = (new Date()).getTime() - 3 * 30 * 24 * 60 * 60 * 1000; //3 Months ago
 		var heatMapEndTime = (new Date()).getTime()
 		var heatMapGranularity = $('#granularityHeatMap').val()
 		$.ajax({
-			url: restAddress + "func/getHeatMapData?kpiId=" + loadedKpi + "&contextualInformation=" + heatMapContextualInformation + "&startTime=" + heatMapStartTime + "&endTime=" + heatMapEndTime + "&granularity=" + heatMapGranularity,
+			url: restAddress + "func/getHeatMapData?kpiId=" + loadedKpi + "&varX="+horizontalSet+ "&varY="+verticalSet+"&startTime=" + heatMapStartTime + "&endTime=" + heatMapEndTime + "&granularity=" + heatMapGranularity+"&contextName=Global&elementName=Global",
 			type: "GET",
 			success: function(heatMapData) {
 				scr.initializeHeatMap(heatMapData)
@@ -1246,36 +1274,32 @@ function ScreenGraph(kpiInfo) {
 								var labelIndex = scr.graphData.labels.length  >1?Math.round((c / (scr.graphData.data[serieIndex].length - 1) * (scr.graphData.labels.length - 1))):0;
 								var legend=scr.graphData.legend[serieIndex];
 								var label = scr.graphData.labels[labelIndex]
-								var startDate=null;
+								var startDate=new Date(parseInt(scr.graphData.labelsTimeStamp[labelIndex]));
+								var n = 0;
+								
 								var endDate;
-								if(!isNaN(label.substring(0,2)))
+								console.log(scr.graphGranularity);
+								switch(scr.graphGranularity)
 								{
-									if(label[2]=="h")
-									{
-										startDate=new Date(label.replace("h",":00:00")+" "+scr.startYear);
-										endDate = new Date(startDate.getTime()+1000*3600);
-									}
-									else
-									{
-										startDate=new Date(label);
-										endDate = new Date(startDate.getTime()+1000*3600*24);
-									}
-								}
-								else
-								{
-									if(label[0]=="W")
-									{
-										startDate=getDateOfWeek(label.substring(1,3),"20"+label.split("'")[1]);
-										endDate = new Date(startDate.getTime()+1000*3600*24*7);
-									}
-									else
-									{
-										startDate=new Date("1"+label);
-										endDate = new Date("1"+label);
+									case 'monthly':
+										endDate=new Date(startDate.getTime());
 										endDate.setMonth(endDate.getMonth()+1);
-									}
+										break;
+									case 'weekly':
+										endDate = new Date(startDate.getTime()+1000*3600*24*7);
+										break;
+									case 'daily':
+										endDate = new Date(startDate.getTime()+1000*3600*24);
+										break;
+									case 'hourly':
+										endDate = new Date(startDate.getTime()+1000*3600);
+										break;
+									default:
+										endDate=new Date(startDate.getTime());
+										endDate.setMonth(endDate.getMonth()+1);
 								}
-								scr.updateHeatMap(startDate.getTime(),endDate.getTime());
+								
+								scr.updateHeatMap(startDate.getTime(),endDate.getTime(),legend);
 							}
 						},
 					},
