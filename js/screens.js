@@ -1243,8 +1243,6 @@ function ScreenGraph(kpiInfo) {
 								var label = scr.graphData.labels[labelIndex]
 								var startDate=null;
 								var endDate;
-								console.log(scr.graphData.labels);
-								console.log(label);
 								if(!isNaN(label.substring(0,2)))
 								{
 									if(label[2]=="h")
@@ -1287,7 +1285,7 @@ function ScreenGraph(kpiInfo) {
 						width: 190,
 						height: 13 * len,
 						x: 700,
-						y: 330 - 13 * len,
+						y: 325 - 13 * len,
 						dotProps: {
 							stroke: "black",
 							"stroke-width": 0
