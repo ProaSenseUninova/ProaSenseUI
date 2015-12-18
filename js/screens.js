@@ -784,10 +784,10 @@ function ScreenGraph(kpiInfo) {
 		var verticalSet = $('#verticalSet').val();
 		var heatMapStartTime = startDate!==undefined?startDate:$('#fromDateHeatMap').handleDtpicker('getDate').getTime();
 		var heatMapEndTime = endDate!==undefined?endDate:$('#toDateHeatMap').handleDtpicker('getDate').getTime();
-		var elementName = legend!==undefined?legend:'Global';
+		var contextName = legend!==undefined?legend:'Global';
 		var heatMapGranularity = legend!==undefined?$('#granularityChart').val():$('#granularityHeatMap').val()
 		$.ajax({
-			url: restAddress + "func/getHeatMapData?kpiId=" + loadedKpi + "&varX="+horizontalSet+"&varY="+verticalSet+ "&startTime=" + heatMapStartTime + "&endTime=" + heatMapEndTime + "&granularity=" + heatMapGranularity+"&contextName="+scr.graphContextualInformation+"&elementName="+elementName,
+			url: restAddress + "func/getHeatMapData?kpiId=" + loadedKpi +"&contextualInformation="+scr.graphContextualInformation+ "&varX="+horizontalSet+"&varY="+verticalSet+ "&startTime=" + heatMapStartTime + "&endTime=" + heatMapEndTime + "&granularity=" + heatMapGranularity+"&contextName="+contextName,
 			type: "GET",
 			success: function(heatMapData) {
 				scr.initializeHeatMap(heatMapData)
