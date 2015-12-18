@@ -937,7 +937,7 @@ function ScreenGraph(kpiInfo) {
 		var heatMapEndTime = (new Date()).getTime()
 		var heatMapGranularity = $('#granularityHeatMap').val()
 		$.ajax({
-			url: restAddress + "func/getHeatMapData?kpiId=" + loadedKpi + "&varX="+horizontalSet+ "&varY="+verticalSet+"&startTime=" + heatMapStartTime + "&endTime=" + heatMapEndTime + "&granularity=" + heatMapGranularity+"&contextName=Global&elementName=Global",
+			url: restAddress + "func/getHeatMapData?kpiId=" + loadedKpi + "&contextualInformation=" + graphContextualInformation + "&varX="+horizontalSet+ "&varY="+verticalSet+"&startTime=" + heatMapStartTime + "&endTime=" + heatMapEndTime + "&granularity=" + heatMapGranularity+"&contextName=Global",
 			type: "GET",
 			success: function(heatMapData) {
 				scr.initializeHeatMap(heatMapData)
