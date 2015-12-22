@@ -1030,12 +1030,16 @@ function ScreenGraph(kpiInfo) {
 
 	this.initializeHeatMap = function(heatMapData) {
 		this.heatMapData = heatMapData;
-		var factor = heatMapData.xLabels.length / 6;
+		var xLabelLength =  heatMapData.xLabels.length 
+		var factor =xLabelLength/ 6 < 0.2 ? 0.2:xLabelLength/6 ;
+		
 		$('#heatMap').empty();
 		$('#heatMap').width(0);
 		var containerWidth = $('#heatMapTable').find('td').eq(4).width();
 		var width = containerWidth < 550 * factor ? 550 * factor : containerWidth > 800 * factor ? 800 * factor : containerWidth;
-		$('#heatMap').width(width);
+		var minWidth = width<400?400:width;
+		var deltaX=xLabelLength!=1?xLabelLength!=2?0:40:80
+		$('#heatMap').width(minWidth);
 		var margin = {
 				top: 30,
 				right: 0,
@@ -1045,12 +1049,12 @@ function ScreenGraph(kpiInfo) {
 			height = (201 - margin.top - margin.bottom) * heatMapData.yLabels.length,
 			gridSize = Math.floor(width / (heatMapData.xLabels.length + 1)),
 			gridHeight = 118,
-			legendElementWidth = gridSize,
+			legendElementWidth = gridSize*minWidth/width,
 			buckets = 9,
-			colors = generateColor("#FFFFFF", "F7A35C", 18); // alternatively colorbrewer.YlGnBu[9]
+			colors = generateColor("#FFFFFF", "#F7A35C", 18); // alternatively colorbrewer.YlGnBu[9]
 
 		var svg = d3.select("#heatMap").append("svg")
-			.attr("width", width)
+			.attr("width", minWidth)
 			.attr("height", height + margin.top + margin.bottom)
 			.append("g")
 			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -1061,7 +1065,7 @@ function ScreenGraph(kpiInfo) {
 			.text(function(d) {
 				return d;
 			})
-			.attr("x", 0)
+			.attr("x", deltaX)
 			.attr("y", function(d, i) {
 				return i * gridHeight;
 			})
@@ -1078,7 +1082,7 @@ function ScreenGraph(kpiInfo) {
 				return d;
 			})
 			.attr("x", function(d, i) {
-				return i * gridSize;
+				return i * gridSize+deltaX;
 			})
 			.attr("y", 0)
 			.style("text-anchor", "middle")
@@ -1108,14 +1112,14 @@ function ScreenGraph(kpiInfo) {
 				return d.varY
 			})
 			.attr("x", function(d) {
-				return (d.varX - 1) * gridSize;
+				return (d.varX - 1) * gridSize+deltaX;
 			})
 			.attr("y", function(d) {
 				return (d.varY - 1) * gridHeight;
 			})
 			.attr("title", function(d) {
 				$(this).tooltip({
-					content: 'Value: ' + d.value,
+					content: d.value==null?"No data":'Value: '+d.value,
 					position: {
 						at: "top-60"
 					},
@@ -1278,7 +1282,6 @@ function ScreenGraph(kpiInfo) {
 								var n = 0;
 								
 								var endDate;
-								console.log(scr.graphGranularity);
 								switch(scr.graphGranularity)
 								{
 									case 'monthly':
