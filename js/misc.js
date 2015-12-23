@@ -10,7 +10,41 @@ String.prototype.endsWith = function(suffix) {
 String.prototype.startsWith = function(suffix) {
 	return this.indexOf(suffix) === 0;
 };
+function handleSel(e)
+{
+	var selectedElement = $(e.target);
+	var selectedOption = selectedElement.val();
+	var tgElementName ="";
+	if(selectedElement.attr('id')=='horizontalSet')
+	{
+		tgElementName = 'verticalSet';
+	}
+	else
+	{
+		tgElementName = 'horizontalSet'
+	}
+	var tgElement = $('#'+tgElementName);
 
+	if(tgElement.val()==selectedOption)
+	{
+		var options = tgElement.find('option[hidden!=hidden]');
+		if(options.length>1)
+		{
+			for(var i=0;i<options.length;i++)
+			{
+				if(options.eq(i).val()!=selectedOption)
+				{
+					options.eq(i).attr('selected',true);
+					break;
+				}
+			}
+		}
+		else
+		{
+			tgElement.val(null);
+		}
+	}	
+}
 
 $(function() {
 	if ($(window).width() >= 800) {

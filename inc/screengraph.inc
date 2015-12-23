@@ -90,18 +90,18 @@
 		<td  width="25%" style="text-align:center">
 			<b>Vertical set:&emsp;</b>
 			<select id="verticalSet"> 
-				<option value="product">Product</option>
+				<option value="shift">Shift</option>
 				<option value="machine">Machine</option>
-				<option selected value="shift">Shift</option>
+				<option value="product">Product</option>
 				<option value="mould">Mould</option>
 			</select>
 		</td>
 		<td  width="25%" style="text-align:center">
 			<b>Horizontal set:&emsp;</b>
 			<select id="horizontalSet"> 
-				<option value="product">Product</option>
-				<option selected value="machine">Machine</option>
 				<option value="shift">Shift</option>
+				<option value="machine">Machine</option>
+				<option value="product">Product</option>
 				<option value="mould">Mould</option>
 			</select>
 		</td>&nbsp;<td>

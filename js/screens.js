@@ -869,6 +869,9 @@ function ScreenGraph(kpiInfo) {
 		var radiosGraph = $('#graphTable').find('td').slice(1, 5);
 		var verticalSet = $('#verticalSet');
 		var horizontalSet = $('#horizontalSet');
+
+		verticalSet.change(handleSel);
+		horizontalSet.change(handleSel);
 		if (arguments.length > 0) {
 			for (var i = 0; i < this.kpiInfo.length; i++) {
 				if (this.kpiInfo[i].id == id) {
@@ -904,6 +907,20 @@ function ScreenGraph(kpiInfo) {
 						}
 					}
 					break;
+				}
+			}
+			var vOptions = verticalSet.find('option[hidden!=hidden]');
+			var hOptions = horizontalSet.find('option[hidden!=hidden]');
+			if(hOptions.length>0)
+			{
+				vOptions.eq(0).attr('selected',true);
+				if(hOptions.length>1)
+				{
+					hOptions.eq(1).attr('selected',true);
+				}
+				else
+				{
+					horizontalSet.val(null);
 				}
 			}
 		}
